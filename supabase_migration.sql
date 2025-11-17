@@ -1099,6 +1099,42 @@ CREATE TABLE IF NOT EXISTS kullanici_mesajlari (
     CONSTRAINT pk_kullanici_mesajlari PRIMARY KEY (id)
 );
 
+-- Table: kullanici (Users/System Users)
+CREATE TABLE IF NOT EXISTS kullanici (
+    id SERIAL,
+    kullanici_adi VARCHAR(100) NOT NULL UNIQUE,
+    sifre VARCHAR(255) NOT NULL, -- Hashed password
+    adi VARCHAR(100),
+    soyadi VARCHAR(100),
+    email VARCHAR(255),
+    telefon VARCHAR(20),
+    rol VARCHAR(50) DEFAULT 'kullanici', -- admin, kullanici, personel, vb.
+    aktif BOOLEAN DEFAULT TRUE,
+    son_giris_tarihi TIMESTAMP,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kullanici PRIMARY KEY (id)
+);
+
+-- Table: arac_yakit (Vehicle Fuel Tracking)
+CREATE TABLE IF NOT EXISTS arac_yakit (
+    id SERIAL,
+    id_arac INTEGER NOT NULL,
+    yakit_tarihi DATE NOT NULL,
+    yakit_tutari DECIMAL(10, 2) NOT NULL,
+    yakit_miktari DECIMAL(10, 2) NOT NULL, -- Litre
+    yakit_tipi VARCHAR(50), -- Benzin, Dizel, LPG, Elektrik
+    km_baslangic INTEGER,
+    km_bitis INTEGER,
+    km_fark INTEGER, -- km_bitis - km_baslangic
+    litre_basina_km DECIMAL(10, 2), -- km_fark / yakit_miktari
+    yakit_istasyonu VARCHAR(255),
+    faturano VARCHAR(100),
+    id_personel INTEGER, -- Yakıt alan personel
+    notlar TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_arac_yakit PRIMARY KEY (id)
+);
+
 -- Table: kursiyer_odeme_kefil
 CREATE TABLE IF NOT EXISTS kursiyer_odeme_kefil (
     id SERIAL,
