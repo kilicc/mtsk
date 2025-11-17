@@ -43,14 +43,14 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-50">
       <TopMenu currentPage={currentPage} onPageChange={setCurrentPage} />
       
       <div className="max-w-full">
-        <header className="bg-white shadow-sm border-b sticky top-16 z-30">
-          <div className="px-6 py-4 flex items-center justify-between">
+        <header className="bg-white border-b border-gray-200 sticky top-[140px] z-30 shadow-sm">
+          <div className="px-6 py-3 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">
+              <h1 className="text-xl font-semibold text-gray-800">
                 {currentPage === 'dashboard' && '📊 Dashboard'}
                 {currentPage === 'kursiyer' && '👥 Kursiyer Yönetimi'}
                 {currentPage === 'kursiyer-detail' && '👤 Kursiyer Detay'}
@@ -71,19 +71,20 @@ function App() {
                 {currentPage === 'yedekleme' && '💾 Yedekleme'}
               </h1>
             </div>
-            <div className="flex items-center gap-4">
-              <span className={`px-4 py-2 text-sm rounded-full font-medium shadow-sm ${
+            <div className="flex items-center gap-3">
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium ${
                 apiConnected 
-                  ? 'bg-green-100 text-green-800 border border-green-300' 
-                  : 'bg-red-100 text-red-800 border border-red-300'
+                  ? 'bg-green-50 text-green-700 border border-green-200' 
+                  : 'bg-red-50 text-red-700 border border-red-200'
               }`}>
-                {apiConnected ? '✅ API Bağlı' : '❌ API Bağlantı Hatası'}
-              </span>
+                <span className={`w-2 h-2 rounded-full ${apiConnected ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                {apiConnected ? 'Bağlı' : 'Bağlantı Hatası'}
+              </div>
             </div>
           </div>
         </header>
 
-        <main className="min-h-screen">
+        <main className="min-h-screen bg-gray-50">
           {currentPage === 'dashboard' && <Dashboard />}
           {currentPage === 'kursiyer' && (
             <KursiyerList 
