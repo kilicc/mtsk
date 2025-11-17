@@ -6,6 +6,10 @@ export * from './sms';
 export * from './arac-personel-evrak';
 export * from './kullanici-mesajlari';
 export * from './eksik-evrak';
+export * from './dogum-gunu';
+export * from './arac-yakit';
+export * from './referans';
+export * from './kurumsal-ders-programi';
 
 // Personel interface moved to arac-personel-evrak.ts
 // Arac interface is in arac-personel-evrak.ts

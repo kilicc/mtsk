@@ -12,6 +12,10 @@ import aracPersonelRoutes from './routes/arac-personel.routes';
 import kursiyerOnKayitRoutes from './routes/kursiyer-on-kayit.routes';
 import kullaniciMesajlariRoutes from './routes/kullanici-mesajlari.routes';
 import eksikEvrakRoutes from './routes/eksik-evrak.routes';
+import dogumGunuRoutes from './routes/dogum-gunu.routes';
+import aracYakitRoutes from './routes/arac-yakit.routes';
+import referansRoutes from './routes/referans.routes';
+import kurumsalDersProgramiRoutes from './routes/kurumsal-ders-programi.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,6 +38,10 @@ app.use('/api/arac-personel', aracPersonelRoutes);
 app.use('/api/kursiyer-on-kayit', kursiyerOnKayitRoutes);
 app.use('/api/kullanici-mesajlari', kullaniciMesajlariRoutes);
 app.use('/api/eksik-evrak', eksikEvrakRoutes);
+app.use('/api/dogum-gunu', dogumGunuRoutes);
+app.use('/api/arac-yakit', aracYakitRoutes);
+app.use('/api/referans', referansRoutes);
+app.use('/api/kurumsal-ders-programi', kurumsalDersProgramiRoutes);
 
 // Start server
 app.listen(PORT, () => {
