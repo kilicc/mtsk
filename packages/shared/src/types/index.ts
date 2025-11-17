@@ -6,14 +6,7 @@ export * from './sms';
 export * from './arac-personel-evrak';
 
 // Personel interface moved to arac-personel-evrak.ts
-
-export interface Arac {
-  id: number;
-  plaka: string;
-  marka?: string;
-  model?: string;
-  yil?: number;
-}
+// Arac interface is in arac-personel-evrak.ts
 
 export interface GrupKarti {
   id: number;

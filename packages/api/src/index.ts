@@ -8,6 +8,7 @@ import kursiyerRoutes from './routes/kursiyer.routes';
 import dersProgramiRoutes from './routes/ders-programi.routes';
 import finansRoutes from './routes/finans.routes';
 import smsRoutes from './routes/sms.routes';
+import aracPersonelRoutes from './routes/arac-personel.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +27,7 @@ app.use('/api/kursiyer', kursiyerRoutes);
 app.use('/api/ders-programi', dersProgramiRoutes);
 app.use('/api/finans', finansRoutes);
 app.use('/api/sms', smsRoutes);
+app.use('/api/arac-personel', aracPersonelRoutes);
 
 // Start server
 app.listen(PORT, () => {

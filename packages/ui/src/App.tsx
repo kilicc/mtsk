@@ -3,8 +3,9 @@ import KursiyerList from './pages/KursiyerList';
 import DersProgrami from './pages/DersProgrami';
 import Finans from './pages/Finans';
 import SMS from './pages/SMS';
+import AracPersonel from './pages/AracPersonel';
 
-type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms';
+type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms' | 'arac-personel';
 
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
@@ -65,6 +66,16 @@ function App() {
                 >
                   SMS
                 </button>
+                <button
+                  onClick={() => setCurrentPage('arac-personel')}
+                  className={`px-4 py-2 rounded-lg text-sm ${
+                    currentPage === 'arac-personel'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Araç & Personel
+                </button>
               </div>
             </div>
             <div className="flex items-center">
@@ -83,6 +94,7 @@ function App() {
         {currentPage === 'ders-programi' && <DersProgrami />}
         {currentPage === 'finans' && <Finans />}
         {currentPage === 'sms' && <SMS />}
+        {currentPage === 'arac-personel' && <AracPersonel />}
       </main>
     </div>
   );
