@@ -5,6 +5,7 @@ export * from './finans';
 export * from './sms';
 export * from './arac-personel-evrak';
 export * from './kullanici-mesajlari';
+export * from './eksik-evrak';
 
 // Personel interface moved to arac-personel-evrak.ts
 // Arac interface is in arac-personel-evrak.ts
