@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
+
+import kursiyerRoutes from './routes/kursiyer.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,25 +13,17 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Supabase client
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE!;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ Supabase credentials missing! Check .env file');
-  process.exit(1);
-}
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
-
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// API Routes
+app.use('/api/kursiyer', kursiyerRoutes);
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 MTSK API Server running on http://localhost:${PORT}`);
-  console.log(`📊 Supabase connected: ${supabaseUrl}`);
+  console.log(`📊 Supabase connected: ${process.env.SUPABASE_URL}`);
 });
 

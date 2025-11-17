@@ -1,17 +1,5 @@
 // Domain types for MTSK application
-
-export interface Kursiyer {
-  id: number;
-  adi: string;
-  soyadi: string;
-  tc_kimlik?: string;
-  telefon?: string;
-  email?: string;
-  adres?: string;
-  dogum_tarihi?: Date;
-  kayit_tarihi: Date;
-  durum: number;
-}
+export * from './kursiyer';
 
 export interface Personel {
   id: number;
