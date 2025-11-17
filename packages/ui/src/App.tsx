@@ -18,6 +18,11 @@ import EksikEvrak from './pages/EksikEvrak';
 import KullaniciMesajlari from './pages/KullaniciMesajlari';
 import Parametreler from './pages/Parametreler';
 import Yedekleme from './pages/Yedekleme';
+import CariFirma from './pages/CariFirma';
+import Banka from './pages/Banka';
+import Raporlar from './pages/Raporlar';
+import Hizmet from './pages/Hizmet';
+import Tanimlar from './pages/Tanimlar';
 
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
@@ -69,6 +74,11 @@ function App() {
                 {currentPage === 'kullanici-mesajlari' && '✉️ Kullanıcı Mesajları'}
                 {currentPage === 'parametreler' && '⚙️ Parametreler'}
                 {currentPage === 'yedekleme' && '💾 Yedekleme'}
+                {currentPage === 'cari-firma' && '🏢 Cari / Firma'}
+                {currentPage === 'banka' && '🏦 Banka'}
+                {currentPage === 'raporlar' && '📊 Raporlar'}
+                {currentPage === 'hizmet' && '🔧 Hizmet'}
+                {currentPage === 'tanimlar' && '📋 Tanımlar'}
               </h1>
             </div>
             <div className="flex items-center gap-3">
@@ -136,6 +146,11 @@ function App() {
           {currentPage === 'kullanici-mesajlari' && <KullaniciMesajlari />}
           {currentPage === 'parametreler' && <Parametreler />}
           {currentPage === 'yedekleme' && <Yedekleme />}
+          {currentPage === 'cari-firma' && <CariFirma />}
+          {currentPage === 'banka' && <Banka />}
+          {currentPage === 'raporlar' && <Raporlar />}
+          {currentPage === 'hizmet' && <Hizmet />}
+          {currentPage === 'tanimlar' && <Tanimlar />}
         </main>
       </div>
     </div>
