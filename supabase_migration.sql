@@ -1099,23 +1099,8 @@ CREATE TABLE IF NOT EXISTS kullanici_mesajlari (
     CONSTRAINT pk_kullanici_mesajlari PRIMARY KEY (id)
 );
 
--- Table: kullanici (Users/System Users)
-CREATE TABLE IF NOT EXISTS kullanici (
-    id SERIAL,
-    kullanici_adi VARCHAR(100) NOT NULL UNIQUE,
-    sifre VARCHAR(255) NOT NULL, -- Hashed password
-    adi VARCHAR(100),
-    soyadi VARCHAR(100),
-    email VARCHAR(255),
-    telefon VARCHAR(20),
-    rol VARCHAR(50) DEFAULT 'kullanici', -- admin, kullanici, personel, vb.
-    aktif BOOLEAN DEFAULT TRUE,
-    son_giris_tarihi TIMESTAMP,
-    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_kullanici PRIMARY KEY (id)
-);
-
 -- Table: arac_yakit (Vehicle Fuel Tracking)
+-- NOT: takip_yakit tablosu zaten mevcut (satır 1967), bu tablo daha detaylı yakıt takibi için
 CREATE TABLE IF NOT EXISTS arac_yakit (
     id SERIAL,
     id_arac INTEGER NOT NULL,
