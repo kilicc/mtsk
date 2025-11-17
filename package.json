@@ -1,11 +1,14 @@
 {
   "name": "mtsk",
   "version": "1.0.0",
-  "description": "Motorlu Taşıtlar Sürücü Kursu Yönetim Sistemi",
+  "description": "Motorlu Taşıtlar Sürücü Kursu Yönetim Sistemi - Electron Desktop App",
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
     "dev": "pnpm -r --parallel dev",
+    "dev:electron": "pnpm --filter @mtsk/app start:dev",
+    "dev:full": "./scripts/dev.sh",
+    "start": "pnpm --filter @mtsk/app start",
     "clean": "pnpm -r clean",
     "lint": "pnpm -r lint"
   },
@@ -18,4 +21,3 @@
     "pnpm": ">=8.0.0"
   }
 }
-

@@ -4,11 +4,13 @@ Motorlu taşıtlar sürücü kursu yönetimi için Electron tabanlı desktop uyg
 
 ## Teknoloji Stack
 
-- **Desktop Shell**: Electron
+- **Desktop Shell**: Electron (Windows & macOS desteği)
 - **UI**: React + Vite
-- **Backend**: Node.js + TypeScript + Express
-- **Database**: Supabase (PostgreSQL)
+- **Backend**: Node.js + TypeScript + Express (Electron içinde çalışır)
+- **Database**: Supabase (PostgreSQL) - Cloud database
 - **Package Manager**: pnpm
+
+**Not**: Bu bir **desktop uygulamasıdır** (web değil). Electron ile Windows ve macOS'ta native uygulama olarak çalışır.
 
 ## Proje Yapısı
 
@@ -43,8 +45,23 @@ pnpm install
 ```
 
 4. Development modunda çalıştır:
+
+**Seçenek 1: Web modunda (sadece UI test için)**
 ```bash
+# Terminal 1: API server
+cd packages/api && pnpm dev
+
+# Terminal 2: UI
+cd packages/ui && pnpm dev
+```
+
+**Seçenek 2: Electron desktop uygulaması olarak**
+```bash
+# Tüm servisleri başlatır (API + UI + Electron)
 pnpm dev
+
+# Sadece Electron'u çalıştır (API ve UI zaten çalışıyorsa)
+pnpm dev:electron
 ```
 
 ## Build
