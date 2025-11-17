@@ -4,8 +4,9 @@ import DersProgrami from './pages/DersProgrami';
 import Finans from './pages/Finans';
 import SMS from './pages/SMS';
 import AracPersonel from './pages/AracPersonel';
+import KursiyerOnKayit from './pages/KursiyerOnKayit';
 
-type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms' | 'arac-personel';
+type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms' | 'arac-personel' | 'kursiyer-on-kayit';
 
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
@@ -76,6 +77,16 @@ function App() {
                 >
                   Araç & Personel
                 </button>
+                <button
+                  onClick={() => setCurrentPage('kursiyer-on-kayit')}
+                  className={`px-4 py-2 rounded-lg text-sm ${
+                    currentPage === 'kursiyer-on-kayit'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Ön Kayıt
+                </button>
               </div>
             </div>
             <div className="flex items-center">
@@ -95,6 +106,7 @@ function App() {
         {currentPage === 'finans' && <Finans />}
         {currentPage === 'sms' && <SMS />}
         {currentPage === 'arac-personel' && <AracPersonel />}
+        {currentPage === 'kursiyer-on-kayit' && <KursiyerOnKayit />}
       </main>
     </div>
   );

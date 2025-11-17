@@ -24,11 +24,16 @@ export interface KursiyerOnKayit {
   id: number;
   adi: string;
   soyadi: string;
+  tc_kimlik?: string;
   telefon?: string;
   email?: string;
+  adres?: string;
+  dogum_tarihi?: Date | string;
   gorusme_tarihi: Date | string;
-  durum: number;
+  id_gorusen_personel?: number;
+  durum: number; // 0: Ön Kayıt, 1: Kesin Kayda Aktarıldı, 2: İptal
   notlar?: string;
+  kayit_tarihi?: Date | string;
 }
 
 export interface KursiyerEvrak {
