@@ -1,0 +1,167 @@
+# =====================================================================
+#  MTSK — Resmi Cursor Geliştirme Kuralları
+# =====================================================================
+#  Bu proje, aşağıdaki kuralların HİÇBİR ŞEKİLDE DEĞİŞTİRİLMEDİĞİ
+#  ve YOL HARİTASINDAN ASLA ÇIKILMADIĞI bir geliştirici akışına sahiptir.
+#  Cursor, AI, geliştirici veya kullanıcı bu kuralları değiştiremez.
+# =====================================================================
+
+
+################################################################################
+# GENEL KURALLAR (DEĞİŞTİRİLEMEZ)
+################################################################################
+
+General:
+  - Aynı hatalara takılma:
+      - Aynı hata 2–3 kez tekrar ederse:
+          - Hatanın nedenini sistematik şekilde çöz.
+          - Gerekirse minimal örnek oluştur.
+          - Sebep bulunmadan ASLA geçiştirme.
+  - Yol Haritasını Asla Değiştirme:
+      - Bu dosyadaki yol haritası TEK DOĞRU KAYNAKTIR.
+      - Teknoloji, mimari, veritabanı, modül sırası değiştirilemez.
+      - Kolaylık için alternatif teknoloji önerme.
+  - Build & Commit Disiplini (EN KRİTİK KURAL):
+      - Her yapılan iş/feature/fix sonrasında:
+          1. `pnpm build` çalıştır.
+          2. Build başarılıysa:
+              - Commit → `git push origin main`
+          3. Build hatalıysa:
+              - ASLA sonraki adıma geçme.
+              - Sadece hatayı çöz → yeniden build al.
+      - Hatalı build ile devam etmek KESİNLİKLE YASAK.
+  - GitHub:
+      - Tek remote: https://github.com/kilicc/mtsk.git
+      - Branch stratejisi:
+          - main = production
+          - feature/* = geliştirilen modüller
+  - Kod stili:
+      - TypeScript strict mode
+      - React + Vite + Electron zorunlu
+      - Node.js backend (TS) zorunlu
+
+
+################################################################################
+# VERİTABANI KURALLARI — Supabase PostgreSQL (FINAL)
+################################################################################
+
+Database:
+  provider: Supabase
+  engine: PostgreSQL
+  reason: Modern, hızlı, realtime, auth + storage destekli
+
+  - Veritabanı olarak SQL Server kullanmak YASAK.
+  - Tüm tablo yapısı Supabase üzerinde oluşturulacak.
+  - Tüm ilişkiler, foreign key'ler, trigger'lar PostgreSQL üzerinde kurulacak.
+  - Stored procedure yerine PostgreSQL function + trigger kullanılacak.
+
+Supabase_Connection:
+  url: https://kdvluufmzgxhqnpfnvdn.supabase.co
+  anon_public_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkdmx1dWZtemd4aHFucGZudmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMzNjU1MTAsImV4cCI6MjA3ODk0MTUxMH0.YXmyxzdjPN-TnGNKovG5T1fXX3bfS1Tk_O8hh6239Ks
+  service_role_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkdmx1dWZtemd4aHFucGZudmRuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzM2NTUxMCwiZXhwIjoyMDc4OTQxNTEwfQ.SIoxUJiorxjNZs9pI0jShNIOoTgiavJWDMA3o3T2PDU
+  password: Tkaipd771
+
+  - Bu bilgiler `.env` içine yazılacak:
+      - SUPABASE_URL
+      - SUPABASE_ANON_KEY
+      - SUPABASE_SERVICE_ROLE
+      - SUPABASE_DB_PASSWORD
+
+  - .env GitHub’a pushlanmayacak.
+  - Example dosyası `.env.example` oluşturulacak.
+
+
+################################################################################
+# TEKNİK MİMARİ — SABİT
+################################################################################
+
+Architecture:
+  - Desktop Shell: Electron
+  - UI: React (Vite)
+  - Backend: Node.js + TypeScript
+  - DB Adapter: Supabase JS + custom DAL
+  - Offline Cache: SQLite (isteğe bağlı)
+  - IPC / REST: Electron → Backend → Supabase
+
+Layers:
+  - /packages/app        : Electron main
+  - /packages/ui         : React frontend
+  - /packages/api        : Node backend (service layer)
+  - /packages/shared     : ortak DTO + utils
+
+DAL Rules:
+  - TypeORM / Prisma kullanma.
+  - Tamamen custom DAL + Supabase client.
+  - Her tablo için `repository` dosyası zorunlu.
+
+
+################################################################################
+# MODÜLER GELİŞTİRME PLANI (SIRA DEĞİŞTİRİLEMEZ)
+################################################################################
+
+Modules_Order:
+  1: Kursiyer Yönetimi
+      - ön kayıt
+      - evrak
+      - kart
+      - sınav notları
+      - fotoğraf
+  2: Ders & Direksiyon Planlama
+      - MEBBİS import/export
+      - takvim planlama
+  3: Finans & Kasa
+      - ödeme planı
+      - tahsilat
+      - kasa raporları
+      - borç SMS
+  4: SMS Servisi
+      - toplu SMS
+      - SMS şablonları
+  5: Araç & Personel & Evrak Takip
+  6: Parametreler / Yetkilendirme (rol bazlı)
+  7: Yedekleme & Otomasyon (Electron timing)
+  8: Paketleme (Electron builder)
+
+Modül Kuralları:
+  - Her modül tamamlandıktan sonra:
+      - Build → test → push
+      - Hata varsa → üstüne git → çöz → tekrar build → push
+
+
+################################################################################
+# GELİŞTİRME AKIŞI (DEĞİŞTİRİLEMEZ)
+################################################################################
+
+Development_Flow:
+  1. Supabase tablo yapısı analiz edilir, ER diyagram çıkarılır.
+  2. Domain modeller (interface/types) oluşturulur.
+  3. Monorepo (pnpm workspace) oluşturulur.
+  4. Electron + React yapılandırılır.
+  5. Supabase bağlantısı backend servisine entegre edilir.
+  6. DAL (repository pattern) kurulumu.
+  7. Modüller sırayla geliştirilir (değiştirilemez).
+  8. Build → Test → GitHub push.
+  9. Entegrasyonlar (SMS, MEBBİS).
+  10. Yedekleme modülü.
+  11. Electron builder ile paketleme.
+
+
+################################################################################
+# EK KURALLAR
+################################################################################
+
+Extra_Rules:
+  - Dummy veri üretirken bile DB şema bütünlüğü bozulamaz.
+  - Frontend tasarımında UI library değiştirme (Tailwind + custom UI).
+  - Backend tarafında Node sürümü değiştirme.
+  - Yeni bir teknoloji, pattern veya framework ÖNERME → YASAK.
+  - Sadece bu kurallar doğrultusunda çalış.
+
+
+################################################################################
+# SON KURAL — asla override edilemez
+################################################################################
+
+Final_Rule:
+  - Bu dosya, proje yaşam döngüsü boyunca tüm AI ve geliştiriciler için “KANUN” niteliğindedir.
+  - Cursor bu kuralların dışına çıkarsa → görev iptal → düzeltme zorunluluğu.

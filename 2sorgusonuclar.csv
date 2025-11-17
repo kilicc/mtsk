@@ -1,0 +1,143 @@
+﻿dbo;Appointments;PK_Appointments;CLUSTERED;1;1;UniqueID
+sys;backup_metadata_store;IX_backup_metadata_type_finish_date;NONCLUSTERED;0;0;backup_type, backup_finish_date
+sys;backup_metadata_store;IX_backup_metadata_uuid;CLUSTERED;1;0;backup_metadata_uuid
+sys;db_ledger_blocks;ci_block_id;CLUSTERED;1;0;block_id
+sys;db_ledger_digest_locations;ci_type_and_path;CLUSTERED;1;0;storage_type, path
+sys;db_ledger_transactions;ci_block_id;CLUSTERED;1;0;block_id, transaction_ordinal
+sys;db_ledger_transactions;nci_transaction_id;NONCLUSTERED;1;0;transaction_id
+dbo;DERS_PROGRAMI_DIREKSIYON;PK_DERS_PROGRAMI_DIREKSIYON;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_E;PK__DERS_PRO__3214EC273493CFA7;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_SAB_PERSONEL;PK__DERS_PRO__3214EC270E6E26BF;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_SAB_SAATLER;PK__DERS_PRO__3214EC271FCDBCEB;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_TEMP;PK__DERS_PRO__3214EC272180FB33;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_YENI;PK__DERS_PRO__3214EC271DB06A4F;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_DIREKSIYON_YENI_TEMP;PK__DERS_PRO__3214EC27160F4887;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_NEW_DIREKSIYON;PK__DERS_PRO__3214EC2730C33EC3;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_NEW_MEBBIS;PK__DERS_PRO__3214EC272CF2ADDF;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_NEW_TEMP;PK__DERS_PRO__3214EC2729221CFB;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_OZELDIREKSIYON;PK__DERS_PRO__3214EC2725518C17;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_OZELDIREKSIYON_RAPORTEMP;PK__DERS_PRO__3214EC271BFD2C07;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_TEORI;PK_DERS_PROGRAMI_TEORI;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_TEORI_MEBBIS;PK__DERS_PRO__3214EC27123EB7A3;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_TEORI_TARIH;PK_DERS_PROGRAMI_TEORI_TARIH;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_TEORI_TEMP;PK__DERS_PRO__3214EC2702FC7413;CLUSTERED;1;1;ID
+dbo;DERS_PROGRAMI_WENNTEC;PK__DERS_PRO__3214EC273864608B;CLUSTERED;1;1;ID
+sys;filestream_tombstone_2073058421;FSTSClusIdx;CLUSTERED;1;0;oplsn_fseqno, oplsn_bOffset, oplsn_slotid
+sys;filestream_tombstone_2073058421;FSTSNCIdx;NONCLUSTERED;0;0;file_id, rowset_guid, column_guid, oplsn_fseqno, oplsn_bOffset, oplsn_slotid
+sys;filetable_updates_1629248859;FFtUpdateIdx;CLUSTERED;1;0;table_id, oplsn_fseqno, oplsn_bOffset, oplsn_slotid, item_guid
+dbo;GRUP_KARTI;PK_GRUP_KARTI;CLUSTERED;1;1;ID
+dbo;GUNLUK_ISLEMLER;PK__GUNLUK_I__3214EC2708EA5793;CLUSTERED;1;1;ID
+dbo;GUNLUK_ISLEMLER_AJANDA;PK__GUNLUK_I__3214EC270519C6AF;CLUSTERED;1;1;ID
+dbo;GUNLUK_ISLEMLER_LOG;PK__LOG_ISLE__3214EC275E3FF0B0;CLUSTERED;1;1;ID
+dbo;KULLANICI;PK_KULLANICI;CLUSTERED;1;1;ID
+dbo;KULLANICI_YETKILERI;PK_KULLANICI_YETKILERI;CLUSTERED;1;1;ID_YETKI
+dbo;KURSIYER_DIREKSIYON;PK__KURSIYER__3214EC2740058253;CLUSTERED;1;1;ID
+dbo;KURSIYER_EVRAK;PK_KURSIYER_EVRAK;CLUSTERED;1;1;ID
+dbo;KURSIYER_EVRAK_TEMP;PK_KURSIYER_EVRAK_TEMP;CLUSTERED;1;1;ID
+dbo;KURSIYER_FATURA;PK__KURSIYER__3214EC273C34F16F;CLUSTERED;1;1;ID
+dbo;KURSIYER_FATURA_DETAY;PK__KURSIYER__3214EC274E53A1AA;CLUSTERED;1;1;ID
+dbo;KURSIYER_GORUSMELERI;PK__KURSIYER__3214EC274A8310C6;CLUSTERED;1;1;ID
+dbo;KURSIYER_HIZLI_KAYIT;PK__KURSIYER__3214EC276A30C649;CLUSTERED;1;1;ID
+dbo;KURSIYER_ODEME_KEFIL;PK_KURSIYER_ODEME_KEFIL;CLUSTERED;1;1;ID
+sys;ledger_columns_history_internal;ci_ledger_columns_history_internal;CLUSTERED;1;0;object_id, column_id
+sys;ledger_columns_history_internal_history;ci_ledger_columns_history_internal_history;CLUSTERED;0;0;object_id, column_id
+sys;ledger_tables_history_internal;ci_ledger_tables_history_internal;CLUSTERED;1;0;object_id
+sys;ledger_tables_history_internal_history;ci_ledger_tables_history_internal_history;CLUSTERED;0;0;object_id
+dbo;LINKLER;PK_LINKLER;CLUSTERED;1;1;ID
+dbo;MUHASEBE_TEMP;PK__MUHASEBE__3214EC2726EFBBC6;CLUSTERED;1;1;ID
+dbo;NEW_DIREKSIYON_KONTROL;PK__NEW_DIRE__3214EC27375B2DB9;CLUSTERED;1;1;ID
+dbo;NEW_DIREKSIYON_MEBBIS;PK__NEW_DIRE__3214EC273E082B48;CLUSTERED;1;1;ID
+dbo;NEW_DIREKSIYON_MUAF;PK__NEW_DIRE__3214EC2731A25463;CLUSTERED;1;1;ID
+dbo;NEW_TEORIK_PROGRAM;PK__NEW_TEOR__3214EC2741A3B202;CLUSTERED;1;1;ID
+dbo;NEW_TEORIK_PROGRAM_MEBBIS;PK__NEW_TEOR__3214EC274E0988E7;CLUSTERED;1;1;ID
+dbo;NEW_TEORIK_PROGRAM_TEMP;PK__NEW_TEOR__3214EC274F089A18;CLUSTERED;1;1;ID
+dbo;ON_GORUSME;PK_ON_GORUSME;CLUSTERED;1;1;ID
+dbo;PARAM_ARAC_BAKIM;PK__PARAM_AR__3214EC275A6F5FCC;CLUSTERED;1;1;ID
+dbo;PARAM_ARAC_BAKIM_LISTESI;PK__PARAM_AR__3214EC275E3FF0B0;CLUSTERED;1;1;ID
+dbo;PARAM_ARAC_CEZA;PK__PARAM_AR__3214EC27569ECEE8;CLUSTERED;1;1;ID
+dbo;PARAM_ARAC_TANIMLARI;PK_PARAM_ARAC_TANIMLARI;CLUSTERED;1;1;ID
+dbo;PARAM_BANKA_TANIMLARI;PK_PARAM_BANKA_TANIMLARI;CLUSTERED;1;1;ID
+dbo;PARAM_DIREKSIYON_SAAT;PK__PARAM_DI__3214EC275CD6CB2B;CLUSTERED;1;1;ID
+dbo;PARAM_DURUM;PK_PARAM_DURUM;CLUSTERED;1;1;ID
+dbo;PARAM_EXCEL_ALANLARI;PK_PARAM_EXCEL_ALANLARI;CLUSTERED;1;1;ID
+dbo;PARAM_GENEL_PARAMETRELER;PK_PARAM_GENEL_PARAMETRELER;CLUSTERED;1;1;ID
+dbo;PARAM_HESAP_PLANI;PK_PARAM_HESAP_PLANI;CLUSTERED;1;1;ID
+dbo;PARAM_IL;PK_PARAM_IL;CLUSTERED;1;1;ID
+dbo;PARAM_ILCE;PK_PARAM_ILCE;CLUSTERED;1;1;ID
+dbo;PARAM_ILCE_MILLIEGITIM;PK_PARAM_ILCE_MILLIEGITIM;CLUSTERED;1;1;ID
+dbo;PARAM_KASA_OZEL_ALANLAR;PK__PARAM_KA__3214EC272AC04CAA;CLUSTERED;1;1;ID
+dbo;PARAM_KURSBILGILERI;PK_PARAM_KURSBILGILERI;CLUSTERED;1;1;ID
+dbo;PARAM_OTO_SMS;PK__PARAM_OT__3214EC2745F365D3;CLUSTERED;1;1;ID
+dbo;PARAM_OZEL_KODLAR;PK_PARAM_OZEL_KODLAR;CLUSTERED;1;1;ID
+dbo;PARAM_OZELDIREKSIYON_SAATLER;PK__PARAM_OZ__3214EC27403A8C7D;CLUSTERED;1;1;ID
+dbo;PARAM_SETTINGS;PK_PARAM_SETTINGS;CLUSTERED;1;1;ID
+dbo;PARAM_SIMULATOR_TANIMLARI;PK__PARAM_SI__3214EC273A81B327;CLUSTERED;1;1;ID
+dbo;PARAM_SINIFLAR;PK__PARAM_SI__3214EC2736B12243;CLUSTERED;1;1;ID
+dbo;PARAM_SMS_AYARLARI;PK_PARAM_SMS_AYARLARI;CLUSTERED;1;1;ID
+dbo;PARAM_SMS_BASLIKLARI;PK__PARAM_SM__3214EC2732616E72;CLUSTERED;1;1;ID
+dbo;PARAM_SMS_GONDERILMIS;PK__PARAM_SM__3214EC273631FF56;CLUSTERED;1;1;ID
+dbo;PARAM_SMS_GRUP;PK__PARAM_SM__3214EC273CDEFCE5;CLUSTERED;1;1;ID
+dbo;PARAM_SMS_SABLONLAR;PK__PARAM_SM__3214EC274EFDAD20;CLUSTERED;1;1;ID
+dbo;PARAM_TATIL_TANIMLARI;PK_PARAM_TATIL_TANIMLARI;CLUSTERED;1;1;ID
+dbo;PARAM_TEORI_DERS_ONAYLAYAN;PK_PARAM_TEORI_DERS_ONAYLAYAN;CLUSTERED;1;1;ID
+dbo;PARAM_VTSUBE;PK_PARAM_VTSUBE;CLUSTERED;1;1;ID
+dbo;PARAM_YEDEK;PK_PARAM_YEDEK;CLUSTERED;1;1;ID
+dbo;PERSONEL;PK_PERSONEL;CLUSTERED;1;1;ID
+sys;plan_persist_context_settings;plan_persist_context_settings_cidx;CLUSTERED;1;0;context_settings_id
+sys;plan_persist_plan;plan_persist_plan_cidx;CLUSTERED;1;0;plan_id
+sys;plan_persist_plan;plan_persist_plan_idx1;NONCLUSTERED;0;0;query_id
+sys;plan_persist_plan_feedback;plan_feedback_cidx;CLUSTERED;1;0;plan_feedback_id
+sys;plan_persist_plan_feedback;plan_feedback_idx1;NONCLUSTERED;0;0;plan_id, feature_id
+sys;plan_persist_plan_forcing_locations;plan_persist_plan_force_cidx;CLUSTERED;1;0;query_id, plan_id, replica_group_id
+sys;plan_persist_plan_forcing_locations;plan_persist_plan_force_idx1;NONCLUSTERED;1;0;plan_forcing_location_id
+sys;plan_persist_query;plan_persist_query_cidx;CLUSTERED;1;0;query_id
+sys;plan_persist_query;plan_persist_query_idx1;NONCLUSTERED;0;0;query_text_id, context_settings_id
+sys;plan_persist_query_hints;plan_persist_query_hints_cidx;CLUSTERED;1;0;query_hint_id
+sys;plan_persist_query_hints;plan_persist_query_hints_idx1;NONCLUSTERED;0;0;query_id
+sys;plan_persist_query_template_parameterization;plan_persist_query_template_parameterization_cidx;CLUSTERED;1;0;query_template_id
+sys;plan_persist_query_template_parameterization;plan_persist_query_template_parameterization_idx1;NONCLUSTERED;1;0;query_template_hash
+sys;plan_persist_query_text;plan_persist_query_text_cidx;CLUSTERED;1;0;query_text_id
+sys;plan_persist_query_text;plan_persist_query_text_idx1;NONCLUSTERED;1;0;statement_sql_handle
+sys;plan_persist_query_variant;plan_persist_query_variant_cidx;CLUSTERED;1;0;query_variant_query_id
+sys;plan_persist_query_variant;plan_persist_query_variant_idx1;NONCLUSTERED;0;0;parent_query_id, dispatcher_plan_id
+sys;plan_persist_replicas;plan_persist_qds_replicas_cidx;CLUSTERED;1;0;replica_group_id
+sys;plan_persist_replicas;plan_persist_qds_replicas_idx1;NONCLUSTERED;0;0;role_type
+sys;plan_persist_runtime_stats;plan_persist_runtime_stats_cidx;CLUSTERED;1;0;plan_id, runtime_stats_interval_id, execution_type
+sys;plan_persist_runtime_stats;plan_persist_runtime_stats_idx1;NONCLUSTERED;1;0;runtime_stats_id
+sys;plan_persist_runtime_stats_interval;plan_persist_runtime_stats_interval_cidx;CLUSTERED;1;0;runtime_stats_interval_id
+sys;plan_persist_runtime_stats_interval;plan_persist_runtime_stats_interval_idx1;NONCLUSTERED;0;0;end_time
+sys;plan_persist_runtime_stats_v2;plan_persist_runtime_stats_v2_cidx;CLUSTERED;1;0;runtime_stats_interval_id, replica_group_id, plan_id, execution_type
+sys;plan_persist_runtime_stats_v2;plan_persist_runtime_stats_v2_idx1;NONCLUSTERED;0;0;plan_id, runtime_stats_interval_id, execution_type
+sys;plan_persist_runtime_stats_v2;plan_persist_runtime_stats_v2_idx2;NONCLUSTERED;1;0;runtime_stats_id
+sys;plan_persist_wait_stats;plan_persist_wait_stats_cidx;CLUSTERED;1;0;runtime_stats_interval_id, plan_id, wait_category, execution_type
+sys;plan_persist_wait_stats;plan_persist_wait_stats_idx1;NONCLUSTERED;1;0;wait_stats_id
+sys;plan_persist_wait_stats_v2;plan_persist_wait_stats_v2_cidx;CLUSTERED;1;0;runtime_stats_interval_id, replica_group_id, plan_id, execution_type, wait_category
+sys;plan_persist_wait_stats_v2;plan_persist_wait_stats_v2_idx1;NONCLUSTERED;0;0;plan_id, runtime_stats_interval_id, execution_type, wait_category
+sys;plan_persist_wait_stats_v2;plan_persist_wait_stats_v2_idx2;NONCLUSTERED;1;0;wait_stats_id
+sys;queue_messages_1977058079;queue_clustered_index;CLUSTERED;1;0;status, conversation_group_id, priority, conversation_handle, queuing_order
+sys;queue_messages_1977058079;queue_secondary_index;NONCLUSTERED;1;0;status, priority, queuing_order, conversation_group_id, conversation_handle, service_id
+sys;queue_messages_2009058193;queue_clustered_index;CLUSTERED;1;0;status, conversation_group_id, priority, conversation_handle, queuing_order
+sys;queue_messages_2009058193;queue_secondary_index;NONCLUSTERED;1;0;status, priority, queuing_order, conversation_group_id, conversation_handle, service_id
+sys;queue_messages_2041058307;queue_clustered_index;CLUSTERED;1;0;status, conversation_group_id, priority, conversation_handle, queuing_order
+sys;queue_messages_2041058307;queue_secondary_index;NONCLUSTERED;1;0;status, priority, queuing_order, conversation_group_id, conversation_handle, service_id
+dbo;RAPOR_LISTESI;PK_RAPOR_LISTESI;CLUSTERED;1;1;ID
+dbo;REFERANS_KART;PK__REFERANS__3214EC27276EDEB3;CLUSTERED;1;1;ID
+dbo;Resources;PK_Resources;CLUSTERED;1;1;UniqueID
+dbo;SINAV_LISTE_DIREKSIYON;PK_SINAV_LISTE_DIREKSIYON;CLUSTERED;1;1;ID
+dbo;SINAV_LISTE_TEORI;PK_SINAV_LISTE_TEORI;CLUSTERED;1;1;ID
+dbo;SINAV_TARIHLERI;PK_SINAV_TARIHLERI;CLUSTERED;1;1;ID
+dbo;SINAV_YERLERI;PK__SINAV_YE__3214EC277B5B524B;CLUSTERED;1;1;ID
+sys;sqlagent_job_history;sqlagent_job_history_clust;CLUSTERED;1;0;instance_id
+sys;sqlagent_job_history;sqlagent_job_history_nc1;NONCLUSTERED;0;0;job_id
+sys;sqlagent_jobs;sqlagent_jobs_clust;CLUSTERED;1;0;job_id
+sys;sqlagent_jobs;sqlagent_jobs_nc1_name;NONCLUSTERED;0;0;name
+sys;sqlagent_jobsteps;sqlagent_jobsteps_clust;CLUSTERED;1;0;job_id, step_id
+sys;sqlagent_jobsteps;sqlagent_jobsteps_nc1;NONCLUSTERED;1;0;job_id, step_name
+sys;sqlagent_jobsteps;sqlagent_jobsteps_nc2;NONCLUSTERED;1;0;step_uid
+sys;sqlagent_jobsteps_logs;sqlagent_jobsteps_logs_nc1;NONCLUSTERED;0;0;step_uid, date_created
+sys;syscommittab;ci_commit_ts;CLUSTERED;1;0;commit_ts, xdes_id
+sys;syscommittab;si_xdes_id;NONCLUSTERED;1;0;dbfragid, xdes_id
+dbo;sysdiagrams;PK__sysdiagr__C2B05B61D8ED3ACA;CLUSTERED;1;1;diagram_id
+dbo;sysdiagrams;UK_principal_name;NONCLUSTERED;1;0;principal_id, name
+dbo;TAKIP_YAKIT;PK_TAKIP_YAKIT;CLUSTERED;1;1;ID
+sys;wpr_bucket_table;wpr_bucket_clustered_idx;CLUSTERED;1;0;bucket_id

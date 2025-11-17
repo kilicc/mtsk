@@ -1,0 +1,21 @@
+{
+  "name": "mtsk",
+  "version": "1.0.0",
+  "description": "Motorlu Taşıtlar Sürücü Kursu Yönetim Sistemi",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r --parallel dev",
+    "clean": "pnpm -r clean",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
+
