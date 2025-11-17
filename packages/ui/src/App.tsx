@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import KursiyerList from './pages/KursiyerList';
 import DersProgrami from './pages/DersProgrami';
+import Finans from './pages/Finans';
+import SMS from './pages/SMS';
 
-type Page = 'kursiyer' | 'ders-programi';
+type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms';
 
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
@@ -31,7 +33,7 @@ function App() {
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
                 >
-                  Kursiyer Yönetimi
+                  Kursiyer
                 </button>
                 <button
                   onClick={() => setCurrentPage('ders-programi')}
@@ -42,6 +44,26 @@ function App() {
                   }`}
                 >
                   Ders Programı
+                </button>
+                <button
+                  onClick={() => setCurrentPage('finans')}
+                  className={`px-4 py-2 rounded-lg text-sm ${
+                    currentPage === 'finans'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  Finans & Kasa
+                </button>
+                <button
+                  onClick={() => setCurrentPage('sms')}
+                  className={`px-4 py-2 rounded-lg text-sm ${
+                    currentPage === 'sms'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  SMS
                 </button>
               </div>
             </div>
@@ -57,7 +79,10 @@ function App() {
       </nav>
 
       <main>
-        {currentPage === 'kursiyer' ? <KursiyerList /> : <DersProgrami />}
+        {currentPage === 'kursiyer' && <KursiyerList />}
+        {currentPage === 'ders-programi' && <DersProgrami />}
+        {currentPage === 'finans' && <Finans />}
+        {currentPage === 'sms' && <SMS />}
       </main>
     </div>
   );

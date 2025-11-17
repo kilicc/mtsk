@@ -1,6 +1,8 @@
 // Domain types for MTSK application
 export * from './kursiyer';
 export * from './ders-programi';
+export * from './finans';
+export * from './sms';
 
 export interface Personel {
   id: number;
