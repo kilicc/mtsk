@@ -18,6 +18,9 @@ import referansRoutes from './routes/referans.routes';
 import kurumsalDersProgramiRoutes from './routes/kurumsal-ders-programi.routes';
 import parametrelerRoutes from './routes/parametreler.routes';
 import yedeklemeRoutes from './routes/yedekleme.routes';
+import cariFirmaRoutes from './routes/cari-firma.routes';
+import bankaRoutes from './routes/banka.routes';
+import hizmetRoutes from './routes/hizmet.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -46,6 +49,9 @@ app.use('/api/referans', referansRoutes);
 app.use('/api/kurumsal-ders-programi', kurumsalDersProgramiRoutes);
 app.use('/api/parametreler', parametrelerRoutes);
 app.use('/api/yedekleme', yedeklemeRoutes);
+app.use('/api/cari-firma', cariFirmaRoutes);
+app.use('/api/banka', bankaRoutes);
+app.use('/api/hizmet', hizmetRoutes);
 
 // Start server
 app.listen(PORT, () => {

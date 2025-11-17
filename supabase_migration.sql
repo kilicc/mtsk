@@ -2032,3 +2032,62 @@ CREATE TABLE IF NOT EXISTS takip_yakit (
     CONSTRAINT pk_takip_yakit PRIMARY KEY (id)
 );
 
+-- Table: cari_firma
+CREATE TABLE IF NOT EXISTS cari_firma (
+    id SERIAL,
+    firma_adi VARCHAR(255) NOT NULL,
+    yetkili_kisi VARCHAR(255),
+    telefon VARCHAR(50),
+    email VARCHAR(255),
+    adres TEXT,
+    vergi_no VARCHAR(50),
+    vergi_dairesi VARCHAR(255),
+    notlar TEXT,
+    akt INTEGER DEFAULT 1,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_cari_firma PRIMARY KEY (id)
+);
+
+-- Table: banka_hesabi
+CREATE TABLE IF NOT EXISTS banka_hesabi (
+    id SERIAL,
+    banka_adi VARCHAR(255) NOT NULL,
+    hesap_adi VARCHAR(255),
+    hesap_no VARCHAR(100),
+    iban VARCHAR(34),
+    sube_adi VARCHAR(255),
+    sube_kodu VARCHAR(50),
+    bakiye DECIMAL(15, 2) DEFAULT 0,
+    notlar TEXT,
+    akt INTEGER DEFAULT 1,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_banka_hesabi PRIMARY KEY (id)
+);
+
+-- Table: banka_islemi
+CREATE TABLE IF NOT EXISTS banka_islemi (
+    id SERIAL,
+    id_banka_hesabi INTEGER NOT NULL,
+    islem_tarihi DATE NOT NULL,
+    islem_tipi VARCHAR(10) NOT NULL CHECK (islem_tipi IN ('giris', 'cikis')),
+    tutar DECIMAL(15, 2) NOT NULL,
+    aciklama TEXT,
+    id_kursiyer INTEGER,
+    id_fatura INTEGER,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_banka_islemi PRIMARY KEY (id),
+    CONSTRAINT fk_banka_islemi_hesap FOREIGN KEY (id_banka_hesabi) REFERENCES banka_hesabi(id)
+);
+
+-- Table: hizmet
+CREATE TABLE IF NOT EXISTS hizmet (
+    id SERIAL,
+    hizmet_adi VARCHAR(255) NOT NULL,
+    hizmet_tipi VARCHAR(100),
+    birim_fiyat DECIMAL(15, 2),
+    aciklama TEXT,
+    akt INTEGER DEFAULT 1,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_hizmet PRIMARY KEY (id)
+);
+
