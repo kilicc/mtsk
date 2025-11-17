@@ -2091,3 +2091,50 @@ CREATE TABLE IF NOT EXISTS hizmet (
     CONSTRAINT pk_hizmet PRIMARY KEY (id)
 );
 
+-- Table: not_defteri (User Notes)
+CREATE TABLE IF NOT EXISTS not_defteri (
+    id SERIAL,
+    id_kullanici INTEGER NOT NULL,
+    not_baslik VARCHAR(255),
+    not_icerik TEXT NOT NULL,
+    aciklama TEXT,
+    alarm_tarihi DATE,
+    sabitli BOOLEAN DEFAULT FALSE,
+    tamamlandi BOOLEAN DEFAULT FALSE,
+    sira INTEGER DEFAULT 0,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP,
+    CONSTRAINT pk_not_defteri PRIMARY KEY (id)
+);
+
+-- Table: vade_tarihi (Due Date Tracking)
+CREATE TABLE IF NOT EXISTS vade_tarihi (
+    id SERIAL,
+    id_kursiyer INTEGER,
+    id_muhasebe INTEGER,
+    vade_tarihi DATE NOT NULL,
+    tutar DECIMAL(15, 2),
+    aciklama TEXT,
+    odendi BOOLEAN DEFAULT FALSE,
+    odeme_tarihi DATE,
+    hatirlatma_gonderildi BOOLEAN DEFAULT FALSE,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_vade_tarihi PRIMARY KEY (id)
+);
+
+-- Table: gorusme_kontrol (Meeting Control)
+CREATE TABLE IF NOT EXISTS gorusme_kontrol (
+    id SERIAL,
+    id_kursiyer INTEGER,
+    id_personel INTEGER,
+    gorusme_tarihi DATE NOT NULL,
+    gorusme_saati TIME,
+    gorusme_konusu VARCHAR(255),
+    gorusme_notlari TEXT,
+    sonuc VARCHAR(100), -- 'olumlu', 'olumsuz', 'beklemede'
+    sonraki_gorusme_tarihi DATE,
+    tamamlandi BOOLEAN DEFAULT FALSE,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_gorusme_kontrol PRIMARY KEY (id)
+);
+

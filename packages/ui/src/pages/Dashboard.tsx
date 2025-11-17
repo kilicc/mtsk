@@ -103,6 +103,64 @@ export default function Dashboard() {
         ))}
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+        {/* Not Defteri Widget */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Not Defteri</h2>
+            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
+              {0}
+            </span>
+          </div>
+          <div className="space-y-2">
+            <input
+              type="text"
+              placeholder="Yeni not yaz (Enter ile kaydet)"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  // TODO: Not kaydet
+                  console.log('Not kaydedilecek');
+                }
+              }}
+            />
+            <div className="text-center py-4 text-gray-500 text-sm">
+              Henüz not kaydı bulunmamaktadır.
+            </div>
+          </div>
+        </div>
+
+        {/* Vade Tarihi Widget */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Vade Tarihi</h2>
+            <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">
+              {0}
+            </span>
+          </div>
+          <div className="space-y-2">
+            <div className="text-center py-4 text-gray-500 text-sm">
+              Yaklaşan vade tarihi bulunmamaktadır.
+            </div>
+          </div>
+        </div>
+
+        {/* Görüşme Kontrol Widget */}
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Görüşme Kontrol</h2>
+            <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">
+              {0}
+            </span>
+          </div>
+          <div className="space-y-2">
+            <div className="text-center py-4 text-gray-500 text-sm">
+              Bekleyen görüşme bulunmamaktadır.
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Hızlı İşlemler</h2>
