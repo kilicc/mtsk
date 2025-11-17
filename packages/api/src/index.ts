@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import kursiyerRoutes from './routes/kursiyer.routes';
+import dersProgramiRoutes from './routes/ders-programi.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,6 +21,7 @@ app.get('/health', (req, res) => {
 
 // API Routes
 app.use('/api/kursiyer', kursiyerRoutes);
+app.use('/api/ders-programi', dersProgramiRoutes);
 
 // Start server
 app.listen(PORT, () => {
