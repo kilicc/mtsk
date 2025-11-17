@@ -11,6 +11,15 @@ export interface EksikEvrak {
   toplam_eksik: number;
 }
 
+export interface EksikEvrakRaporu {
+  id_kursiyer: number;
+  adi: string;
+  soyadi: string;
+  tc_kimlik?: string;
+  telefon?: string;
+  eksik_evraklar: string[];
+}
+
 export type EvrakTipi = 
   | 'nufus_cuzdani_on'
   | 'nufus_cuzdani_arka'

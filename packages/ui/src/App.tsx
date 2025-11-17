@@ -1,116 +1,116 @@
 import { useState, useEffect } from 'react';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
 import KursiyerList from './pages/KursiyerList';
 import DersProgrami from './pages/DersProgrami';
+import KurumsalDersProgrami from './pages/KurumsalDersProgrami';
 import Finans from './pages/Finans';
 import SMS from './pages/SMS';
 import AracPersonel from './pages/AracPersonel';
+import AracYakit from './pages/AracYakit';
 import KursiyerOnKayit from './pages/KursiyerOnKayit';
+import Referans from './pages/Referans';
+import DogumGunu from './pages/DogumGunu';
+import EksikEvrak from './pages/EksikEvrak';
+import KullaniciMesajlari from './pages/KullaniciMesajlari';
+import Parametreler from './pages/Parametreler';
+import Yedekleme from './pages/Yedekleme';
 
-type Page = 'kursiyer' | 'ders-programi' | 'finans' | 'sms' | 'arac-personel' | 'kursiyer-on-kayit';
+type Page = 
+  | 'dashboard'
+  | 'kursiyer'
+  | 'kursiyer-on-kayit'
+  | 'ders-programi'
+  | 'kurumsal-ders-programi'
+  | 'finans'
+  | 'sms'
+  | 'arac-personel'
+  | 'arac-yakit'
+  | 'referans'
+  | 'dogum-gunu'
+  | 'eksik-evrak'
+  | 'kullanici-mesajlari'
+  | 'parametreler'
+  | 'yedekleme';
 
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
-  const [currentPage, setCurrentPage] = useState<Page>('kursiyer');
+  const [currentPage, setCurrentPage] = useState<Page>('dashboard');
 
   useEffect(() => {
     // Check API health
     fetch('http://localhost:3001/health')
       .then(() => setApiConnected(true))
       .catch(() => setApiConnected(false));
+    
+    // Check every 30 seconds
+    const interval = setInterval(() => {
+      fetch('http://localhost:3001/health')
+        .then(() => setApiConnected(true))
+        .catch(() => setApiConnected(false));
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold text-gray-900">MTSK - Motorlu Taşıtlar Sürücü Kursu</h1>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setCurrentPage('kursiyer')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'kursiyer'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Kursiyer
-                </button>
-                <button
-                  onClick={() => setCurrentPage('ders-programi')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'ders-programi'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Ders Programı
-                </button>
-                <button
-                  onClick={() => setCurrentPage('finans')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'finans'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Finans & Kasa
-                </button>
-                <button
-                  onClick={() => setCurrentPage('sms')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'sms'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  SMS
-                </button>
-                <button
-                  onClick={() => setCurrentPage('arac-personel')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'arac-personel'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Araç & Personel
-                </button>
-                <button
-                  onClick={() => setCurrentPage('kursiyer-on-kayit')}
-                  className={`px-4 py-2 rounded-lg text-sm ${
-                    currentPage === 'kursiyer-on-kayit'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  Ön Kayıt
-                </button>
-              </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
+      
+      <div className="ml-64">
+        <header className="bg-white shadow-sm border-b sticky top-0 z-30">
+          <div className="px-6 py-4 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">
+                {currentPage === 'dashboard' && '📊 Dashboard'}
+                {currentPage === 'kursiyer' && '👥 Kursiyer Yönetimi'}
+                {currentPage === 'kursiyer-on-kayit' && '📝 Ön Kayıt'}
+                {currentPage === 'ders-programi' && '📅 Ders Programı'}
+                {currentPage === 'kurumsal-ders-programi' && '🚗 Kurumsal Ders Programı'}
+                {currentPage === 'finans' && '💰 Finans & Kasa'}
+                {currentPage === 'sms' && '💬 SMS Servisi'}
+                {currentPage === 'arac-personel' && '🚙 Araç & Personel'}
+                {currentPage === 'arac-yakit' && '⛽ Yakıt Takibi'}
+                {currentPage === 'referans' && '🔗 Referans İşlemleri'}
+                {currentPage === 'dogum-gunu' && '🎂 Doğum Günü Takibi'}
+                {currentPage === 'eksik-evrak' && '📄 Eksik Evrak Takibi'}
+                {currentPage === 'kullanici-mesajlari' && '✉️ Kullanıcı Mesajları'}
+                {currentPage === 'parametreler' && '⚙️ Parametreler'}
+                {currentPage === 'yedekleme' && '💾 Yedekleme'}
+              </h1>
             </div>
-            <div className="flex items-center">
-              <span className={`px-3 py-1 text-sm rounded-full ${
-                apiConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            <div className="flex items-center gap-4">
+              <span className={`px-4 py-2 text-sm rounded-full font-medium shadow-sm ${
+                apiConnected 
+                  ? 'bg-green-100 text-green-800 border border-green-300' 
+                  : 'bg-red-100 text-red-800 border border-red-300'
               }`}>
                 {apiConnected ? '✅ API Bağlı' : '❌ API Bağlantı Hatası'}
               </span>
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      <main>
-        {currentPage === 'kursiyer' && <KursiyerList />}
-        {currentPage === 'ders-programi' && <DersProgrami />}
-        {currentPage === 'finans' && <Finans />}
-        {currentPage === 'sms' && <SMS />}
-        {currentPage === 'arac-personel' && <AracPersonel />}
-        {currentPage === 'kursiyer-on-kayit' && <KursiyerOnKayit />}
-      </main>
+        <main className="min-h-screen">
+          {currentPage === 'dashboard' && <Dashboard />}
+          {currentPage === 'kursiyer' && <KursiyerList />}
+          {currentPage === 'kursiyer-on-kayit' && <KursiyerOnKayit />}
+          {currentPage === 'ders-programi' && <DersProgrami />}
+          {currentPage === 'kurumsal-ders-programi' && <KurumsalDersProgrami />}
+          {currentPage === 'finans' && <Finans />}
+          {currentPage === 'sms' && <SMS />}
+          {currentPage === 'arac-personel' && <AracPersonel />}
+          {currentPage === 'arac-yakit' && <AracYakit />}
+          {currentPage === 'referans' && <Referans />}
+          {currentPage === 'dogum-gunu' && <DogumGunu />}
+          {currentPage === 'eksik-evrak' && <EksikEvrak />}
+          {currentPage === 'kullanici-mesajlari' && <KullaniciMesajlari />}
+          {currentPage === 'parametreler' && <Parametreler />}
+          {currentPage === 'yedekleme' && <Yedekleme />}
+        </main>
+      </div>
     </div>
   );
 }
 
 export default App;
-
