@@ -10,6 +10,8 @@ export * from './dogum-gunu';
 export * from './arac-yakit';
 export * from './referans';
 export * from './kurumsal-ders-programi';
+export * from './parametreler';
+export * from './yedekleme';
 
 // Personel interface moved to arac-personel-evrak.ts
 // Arac interface is in arac-personel-evrak.ts

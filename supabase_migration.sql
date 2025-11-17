@@ -1099,6 +1099,43 @@ CREATE TABLE IF NOT EXISTS kullanici_mesajlari (
     CONSTRAINT pk_kullanici_mesajlari PRIMARY KEY (id)
 );
 
+-- Table: yedekleme_gecmisi (Backup History)
+CREATE TABLE IF NOT EXISTS yedekleme_gecmisi (
+    id SERIAL,
+    yedekleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    yedekleme_tipi VARCHAR(50), -- 'full', 'incremental'
+    dosya_yolu TEXT,
+    dosya_boyutu BIGINT, -- Bytes
+    durum VARCHAR(50), -- 'basarili', 'basarisiz', 'devam_ediyor'
+    hata_mesaji TEXT,
+    CONSTRAINT pk_yedekleme_gecmisi PRIMARY KEY (id)
+);
+
+-- Table: yedekleme_ayarlari (Backup Settings - 7 days)
+CREATE TABLE IF NOT EXISTS yedekleme_ayarlari (
+    id SERIAL,
+    gun INTEGER NOT NULL, -- 0: Pazar, 1: Pazartesi, ..., 6: Cumartesi
+    saat VARCHAR(5) NOT NULL, -- HH:mm formatında
+    aktif BOOLEAN DEFAULT FALSE,
+    yedekleme_tipi VARCHAR(50) DEFAULT 'full',
+    saklama_suresi INTEGER DEFAULT 30, -- Gün cinsinden
+    CONSTRAINT pk_yedekleme_ayarlari PRIMARY KEY (id),
+    CONSTRAINT uq_yedekleme_ayarlari_gun UNIQUE (gun)
+);
+
+-- Table: zamanlanmis_gorevler (Scheduled Tasks)
+CREATE TABLE IF NOT EXISTS zamanlanmis_gorevler (
+    id SERIAL,
+    gorev_adi VARCHAR(255) NOT NULL,
+    gorev_tipi VARCHAR(50) NOT NULL, -- 'yedekleme', 'sms', 'rapor', vb.
+    zamanlama VARCHAR(255) NOT NULL, -- Cron expression veya 'daily', 'weekly', vb.
+    aktif BOOLEAN DEFAULT TRUE,
+    son_calistirma TIMESTAMP,
+    sonraki_calistirma TIMESTAMP,
+    parametreler JSONB, -- Flexible parameters
+    CONSTRAINT pk_zamanlanmis_gorevler PRIMARY KEY (id)
+);
+
 -- Table: arac_yakit (Vehicle Fuel Tracking)
 -- NOT: takip_yakit tablosu zaten mevcut (satır 1967), bu tablo daha detaylı yakıt takibi için
 CREATE TABLE IF NOT EXISTS arac_yakit (

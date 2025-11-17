@@ -16,6 +16,8 @@ import dogumGunuRoutes from './routes/dogum-gunu.routes';
 import aracYakitRoutes from './routes/arac-yakit.routes';
 import referansRoutes from './routes/referans.routes';
 import kurumsalDersProgramiRoutes from './routes/kurumsal-ders-programi.routes';
+import parametrelerRoutes from './routes/parametreler.routes';
+import yedeklemeRoutes from './routes/yedekleme.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -42,6 +44,8 @@ app.use('/api/dogum-gunu', dogumGunuRoutes);
 app.use('/api/arac-yakit', aracYakitRoutes);
 app.use('/api/referans', referansRoutes);
 app.use('/api/kurumsal-ders-programi', kurumsalDersProgramiRoutes);
+app.use('/api/parametreler', parametrelerRoutes);
+app.use('/api/yedekleme', yedeklemeRoutes);
 
 // Start server
 app.listen(PORT, () => {
