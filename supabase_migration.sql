@@ -1067,6 +1067,38 @@ CREATE TABLE IF NOT EXISTS kursiyer_hizli_kayit (
     CONSTRAINT pk_kursiyer_hizli_kayit PRIMARY KEY (id)
 );
 
+-- Table: kursiyer_on_kayit (Pre-registration)
+CREATE TABLE IF NOT EXISTS kursiyer_on_kayit (
+    id SERIAL,
+    adi VARCHAR(255) NOT NULL,
+    soyadi VARCHAR(255) NOT NULL,
+    tc_kimlik VARCHAR(11),
+    telefon VARCHAR(20),
+    email VARCHAR(255),
+    adres TEXT,
+    dogum_tarihi DATE,
+    gorusme_tarihi DATE NOT NULL,
+    id_gorusen_personel INTEGER,
+    durum INTEGER DEFAULT 0, -- 0: Ön Kayıt, 1: Kesin Kayda Aktarıldı, 2: İptal
+    notlar TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kursiyer_on_kayit PRIMARY KEY (id)
+);
+
+-- Table: kullanici_mesajlari (User Messages)
+CREATE TABLE IF NOT EXISTS kullanici_mesajlari (
+    id SERIAL,
+    id_gonderen INTEGER NOT NULL, -- Kullanıcı ID
+    id_alici INTEGER, -- null = Tüm kullanıcılara (broadcast)
+    baslik VARCHAR(255) NOT NULL,
+    mesaj TEXT NOT NULL,
+    okundu BOOLEAN DEFAULT FALSE,
+    okunma_tarihi TIMESTAMP,
+    gonderim_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    silindi BOOLEAN DEFAULT FALSE,
+    CONSTRAINT pk_kullanici_mesajlari PRIMARY KEY (id)
+);
+
 -- Table: kursiyer_odeme_kefil
 CREATE TABLE IF NOT EXISTS kursiyer_odeme_kefil (
     id SERIAL,

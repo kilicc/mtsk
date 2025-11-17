@@ -4,6 +4,7 @@ export * from './ders-programi';
 export * from './finans';
 export * from './sms';
 export * from './arac-personel-evrak';
+export * from './kullanici-mesajlari';
 
 // Personel interface moved to arac-personel-evrak.ts
 // Arac interface is in arac-personel-evrak.ts
@@ -28,4 +29,3 @@ export interface DersProgrami {
 }
 
 // Add more types as needed
-
