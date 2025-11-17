@@ -5,7 +5,12 @@ const API_URL = 'http://localhost:3001/api';
 
 type Tab = 'arac' | 'personel';
 
-export default function AracPersonel() {
+interface AracPersonelProps {
+  onAracDetailClick?: (id: number) => void;
+  onPersonelDetailClick?: (id: number) => void;
+}
+
+export default function AracPersonel({ onAracDetailClick, onPersonelDetailClick }: AracPersonelProps) {
   const [activeTab, setActiveTab] = useState<Tab>('arac');
   const [araclar, setAraclar] = useState<Arac[]>([]);
   const [personel, setPersonel] = useState<Personel[]>([]);
@@ -81,36 +86,50 @@ export default function AracPersonel() {
   }, [activeTab]);
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Araç & Personel Yönetimi
-        </h1>
+    <div className="p-6 space-y-6">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">🚙 Araç & Personel Yönetimi</h1>
+          <p className="text-gray-600">Araç ve personel bilgilerinin yönetimi</p>
+        </div>
+        <div className="flex gap-2">
+          {activeTab === 'arac' && (
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg">
+              + Yeni Araç Ekle
+            </button>
+          )}
+          {activeTab === 'personel' && (
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg">
+              + Yeni Personel Ekle
+            </button>
+          )}
+        </div>
+      </div>
 
+      <div className="bg-white rounded-xl shadow-lg p-6">
         {/* Tabs */}
-        <div className="flex gap-2 border-b">
+        <div className="flex gap-2 border-b mb-6">
           <button
             onClick={() => setActiveTab('arac')}
-            className={`px-4 py-2 font-medium ${
+            className={`px-4 py-2 font-medium transition-colors ${
               activeTab === 'arac'
                 ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            Araç İşlemleri
+            🚗 Araç İşlemleri
           </button>
           <button
             onClick={() => setActiveTab('personel')}
-            className={`px-4 py-2 font-medium ${
+            className={`px-4 py-2 font-medium transition-colors ${
               activeTab === 'personel'
                 ? 'border-b-2 border-blue-600 text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-600 hover:text-gray-800'
             }`}
           >
-            Personel İşlemleri
+            👔 Personel İşlemleri
           </button>
         </div>
-      </div>
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
@@ -122,7 +141,7 @@ export default function AracPersonel() {
       {activeTab === 'arac' && (
         <div>
           {/* Filters */}
-          <div className="mb-4 p-4 bg-white rounded-lg shadow-sm border">
+          <div className="mb-4 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-sm font-medium text-gray-700 mb-3">Filtrele</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -164,9 +183,11 @@ export default function AracPersonel() {
 
           {/* Vehicles Table */}
           {loading ? (
-            <div className="text-center py-8">Yükleniyor...</div>
+            <div className="flex items-center justify-center h-96">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -189,12 +210,15 @@ export default function AracPersonel() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Durum
                       </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        İşlemler
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {araclar.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                        <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
                           Kayıt bulunamadı
                         </td>
                       </tr>
@@ -235,6 +259,19 @@ export default function AracPersonel() {
                               {arac.akt === 1 ? 'Aktif' : 'Pasif'}
                             </span>
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => onAracDetailClick?.(arac.id)}
+                                className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+                              >
+                                👁️ Detay
+                              </button>
+                              <button className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-medium">
+                                ✏️ Düzenle
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       ))
                     )}
@@ -250,8 +287,8 @@ export default function AracPersonel() {
       {activeTab === 'personel' && (
         <div>
           {/* Filters */}
-          <div className="mb-4 p-4 bg-white rounded-lg shadow-sm border">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Filtrele</h3>
+          <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-sm font-medium text-gray-700 mb-3">🔍 Filtrele</h3>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -302,9 +339,11 @@ export default function AracPersonel() {
 
           {/* Personnel Table */}
           {loading ? (
-            <div className="text-center py-8">Yükleniyor...</div>
+            <div className="flex items-center justify-center h-96">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -327,12 +366,15 @@ export default function AracPersonel() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Durum
                       </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        İşlemler
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {personel.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                        <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
                           Kayıt bulunamadı
                         </td>
                       </tr>
@@ -367,6 +409,19 @@ export default function AracPersonel() {
                               {p.akt === 1 ? 'Aktif' : 'Pasif'}
                             </span>
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => onPersonelDetailClick?.(p.id)}
+                                className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+                              >
+                                👁️ Detay
+                              </button>
+                              <button className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-medium">
+                                ✏️ Düzenle
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       ))
                     )}
@@ -377,6 +432,7 @@ export default function AracPersonel() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }

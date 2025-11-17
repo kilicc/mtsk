@@ -3,7 +3,11 @@ import { Kursiyer } from '@mtsk/shared';
 
 const API_URL = 'http://localhost:3001/api';
 
-export default function KursiyerList() {
+interface KursiyerListProps {
+  onDetailClick?: (id: number) => void;
+}
+
+export default function KursiyerList({ onDetailClick }: KursiyerListProps) {
   const [kursiyerler, setKursiyerler] = useState<Kursiyer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,11 +48,21 @@ export default function KursiyerList() {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">Kursiyer Yönetimi</h1>
-        
-        <div className="flex gap-2 mb-4">
+    <div className="p-6 space-y-6">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">👥 Kursiyer Yönetimi</h1>
+          <p className="text-gray-600">Tüm kursiyerlerin listesi ve yönetimi</p>
+        </div>
+        <button
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg"
+        >
+          + Yeni Kursiyer Ekle
+        </button>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="flex gap-2 mb-6">
           <input
             type="text"
             placeholder="Ad, soyad veya TC ile ara..."
@@ -59,24 +73,47 @@ export default function KursiyerList() {
           />
           <button
             onClick={handleSearch}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Ara
+            🔍 Ara
           </button>
           <button
             onClick={loadKursiyerler}
-            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
           >
-            Yenile
+            🔄 Yenile
+          </button>
+          <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+            📊 Excel
+          </button>
+          <button className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+            🖨️ Yazdır
           </button>
         </div>
       </div>
 
       {loading ? (
-        <div className="text-center py-8">Yükleniyor...</div>
+        <div className="flex items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
       ) : (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="px-6 py-4 bg-gray-50 border-b flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">
+              Toplam: <span className="font-bold text-gray-900">{kursiyerler.length}</span> kursiyer
+            </span>
+            <div className="flex items-center gap-2">
+              <select className="px-3 py-1 border border-gray-300 rounded-lg text-sm">
+                <option>10</option>
+                <option>30</option>
+                <option>50</option>
+                <option>100</option>
+              </select>
+              <span className="text-sm text-gray-600">kayıt göster</span>
+            </div>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
@@ -85,12 +122,13 @@ export default function KursiyerList() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Telefon</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kayıt Tarihi</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Durum</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">İşlemler</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {kursiyerler.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-4 text-center text-gray-500">
                     Kursiyer bulunamadı
                   </td>
                 </tr>
@@ -113,11 +151,28 @@ export default function KursiyerList() {
                         {kursiyer.durum === 1 ? 'Aktif' : 'Pasif'}
                       </span>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => onDetailClick?.(kursiyer.id)}
+                          className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors font-medium"
+                        >
+                          👁️ Detay
+                        </button>
+                        <button className="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors font-medium">
+                          ✏️ Düzenle
+                        </button>
+                        <button className="px-3 py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium">
+                          🗑️ Sil
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

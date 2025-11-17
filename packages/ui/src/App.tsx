@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
+import TopMenu, { type Page } from './components/TopMenu';
 import Dashboard from './pages/Dashboard';
 import KursiyerList from './pages/KursiyerList';
+import KursiyerDetail from './pages/KursiyerDetail';
+import AracDetail from './pages/AracDetail';
+import PersonelDetail from './pages/PersonelDetail';
 import DersProgrami from './pages/DersProgrami';
 import KurumsalDersProgrami from './pages/KurumsalDersProgrami';
 import Finans from './pages/Finans';
@@ -16,26 +19,12 @@ import KullaniciMesajlari from './pages/KullaniciMesajlari';
 import Parametreler from './pages/Parametreler';
 import Yedekleme from './pages/Yedekleme';
 
-type Page = 
-  | 'dashboard'
-  | 'kursiyer'
-  | 'kursiyer-on-kayit'
-  | 'ders-programi'
-  | 'kurumsal-ders-programi'
-  | 'finans'
-  | 'sms'
-  | 'arac-personel'
-  | 'arac-yakit'
-  | 'referans'
-  | 'dogum-gunu'
-  | 'eksik-evrak'
-  | 'kullanici-mesajlari'
-  | 'parametreler'
-  | 'yedekleme';
-
 function App() {
   const [apiConnected, setApiConnected] = useState(false);
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+  const [selectedKursiyerId, setSelectedKursiyerId] = useState<number | null>(null);
+  const [selectedAracId, setSelectedAracId] = useState<number | null>(null);
+  const [selectedPersonelId, setSelectedPersonelId] = useState<number | null>(null);
 
   useEffect(() => {
     // Check API health
@@ -55,15 +44,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
+      <TopMenu currentPage={currentPage} onPageChange={setCurrentPage} />
       
-      <div className="ml-64">
-        <header className="bg-white shadow-sm border-b sticky top-0 z-30">
+      <div className="max-w-full">
+        <header className="bg-white shadow-sm border-b sticky top-16 z-30">
           <div className="px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">
                 {currentPage === 'dashboard' && '📊 Dashboard'}
                 {currentPage === 'kursiyer' && '👥 Kursiyer Yönetimi'}
+                {currentPage === 'kursiyer-detail' && '👤 Kursiyer Detay'}
+                {currentPage === 'arac-detail' && '🚗 Araç Detay'}
+                {currentPage === 'personel-detail' && '👔 Personel Detay'}
                 {currentPage === 'kursiyer-on-kayit' && '📝 Ön Kayıt'}
                 {currentPage === 'ders-programi' && '📅 Ders Programı'}
                 {currentPage === 'kurumsal-ders-programi' && '🚗 Kurumsal Ders Programı'}
@@ -93,13 +85,49 @@ function App() {
 
         <main className="min-h-screen">
           {currentPage === 'dashboard' && <Dashboard />}
-          {currentPage === 'kursiyer' && <KursiyerList />}
+          {currentPage === 'kursiyer' && (
+            <KursiyerList 
+              onDetailClick={(id) => {
+                setSelectedKursiyerId(id);
+                setCurrentPage('kursiyer-detail');
+              }}
+            />
+          )}
+          {currentPage === 'kursiyer-detail' && selectedKursiyerId && (
+            <KursiyerDetail 
+              id={selectedKursiyerId.toString()}
+              onBack={() => setCurrentPage('kursiyer')}
+            />
+          )}
           {currentPage === 'kursiyer-on-kayit' && <KursiyerOnKayit />}
           {currentPage === 'ders-programi' && <DersProgrami />}
           {currentPage === 'kurumsal-ders-programi' && <KurumsalDersProgrami />}
           {currentPage === 'finans' && <Finans />}
           {currentPage === 'sms' && <SMS />}
-          {currentPage === 'arac-personel' && <AracPersonel />}
+          {currentPage === 'arac-personel' && (
+            <AracPersonel
+              onAracDetailClick={(id) => {
+                setSelectedAracId(id);
+                setCurrentPage('arac-detail');
+              }}
+              onPersonelDetailClick={(id) => {
+                setSelectedPersonelId(id);
+                setCurrentPage('personel-detail');
+              }}
+            />
+          )}
+          {currentPage === 'arac-detail' && selectedAracId && (
+            <AracDetail
+              id={selectedAracId.toString()}
+              onBack={() => setCurrentPage('arac-personel')}
+            />
+          )}
+          {currentPage === 'personel-detail' && selectedPersonelId && (
+            <PersonelDetail
+              id={selectedPersonelId.toString()}
+              onBack={() => setCurrentPage('arac-personel')}
+            />
+          )}
           {currentPage === 'arac-yakit' && <AracYakit />}
           {currentPage === 'referans' && <Referans />}
           {currentPage === 'dogum-gunu' && <DogumGunu />}
