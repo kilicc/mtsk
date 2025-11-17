@@ -3,15 +3,9 @@ export * from './kursiyer';
 export * from './ders-programi';
 export * from './finans';
 export * from './sms';
+export * from './arac-personel-evrak';
 
-export interface Personel {
-  id: number;
-  adi: string;
-  soyadi: string;
-  telefon?: string;
-  email?: string;
-  gorev?: string;
-}
+// Personel interface moved to arac-personel-evrak.ts
 
 export interface Arac {
   id: number;
