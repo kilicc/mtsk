@@ -86,7 +86,7 @@ export default function AracPersonel({ onAracDetailClick, onPersonelDetailClick 
   }, [activeTab]);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-6" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">🚙 Araç & Personel Yönetimi</h1>
@@ -94,12 +94,18 @@ export default function AracPersonel({ onAracDetailClick, onPersonelDetailClick 
         </div>
         <div className="flex gap-2">
           {activeTab === 'arac' && (
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg">
+            <button 
+              onClick={() => onAracDetailClick && onAracDetailClick(0)}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg"
+            >
               + Yeni Araç Ekle
             </button>
           )}
           {activeTab === 'personel' && (
-            <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-lg">
+            <button 
+              onClick={() => onPersonelDetailClick && onPersonelDetailClick(0)}
+              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium shadow-lg"
+            >
               + Yeni Personel Ekle
             </button>
           )}

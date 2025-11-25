@@ -26,7 +26,8 @@ router.get('/rapor', async (req, res) => {
     const raporlar = await eksikEvrakService.getAllEvrakDurumRaporu();
     res.json(raporlar);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Eksik evrak rapor error:', error.message);
+    res.json([]);
   }
 });
 

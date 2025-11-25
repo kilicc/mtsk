@@ -221,5 +221,82 @@ router.post('/mebbis/:id/transferred', async (req, res) => {
   }
 });
 
+// ========== Otomatik Ders Programı Oluşturma ==========
+
+/**
+ * POST /api/ders-programi/otomatik/teorik
+ * Otomatik teorik ders programı oluştur
+ */
+router.post('/otomatik/teorik', async (req, res) => {
+  try {
+    const { mebbisDonemi, grupBaslangicTarihi, egitimTuru } = req.body;
+
+    if (!mebbisDonemi || !grupBaslangicTarihi) {
+      return res.status(400).json({ error: 'MEBBİS dönemi ve grup başlangıç tarihi zorunludur' });
+    }
+
+    const result = await dersProgramiService.otomatikTeorikDersProgramiOlustur({
+      mebbisDonemi,
+      grupBaslangicTarihi,
+      egitimTuru: egitimTuru || 'normal',
+    });
+
+    res.json(result);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/ders-programi/otomatik/uygulama
+ * Otomatik uygulama ders programı oluştur (E-sınavdan geçenler için)
+ */
+router.post('/otomatik/uygulama', async (req, res) => {
+  try {
+    const { esinavTarihi, mebbisDonemi, programBaslamaTarihi } = req.body;
+
+    if (!esinavTarihi || !programBaslamaTarihi) {
+      return res.status(400).json({ error: 'E-sınav tarihi ve program başlama tarihi zorunludur' });
+    }
+
+    const result = await dersProgramiService.otomatikUygulamaDersProgramiOlustur({
+      esinavTarihi,
+      mebbisDonemi,
+      programBaslamaTarihi,
+    });
+
+    res.json(result);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/ders-programi/esinav/tarihler
+ * E-sınav tarihlerini getir
+ */
+router.get('/esinav/tarihler', async (req, res) => {
+  try {
+    const tarihler = await dersProgramiService.getESinavTarihleri();
+    res.json(tarihler);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/ders-programi/esinav/:tarih/gecenler
+ * Belirli bir e-sınav tarihinde geçen kursiyerleri getir
+ */
+router.get('/esinav/:tarih/gecenler', async (req, res) => {
+  try {
+    const { tarih } = req.params;
+    const kursiyerler = await dersProgramiService.getESinavGecenKursiyerler(tarih);
+    res.json(kursiyerler);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;
 

@@ -30,6 +30,7 @@ export interface Personel {
   adi?: string;
   soyadi?: string;
   personel_no?: number;
+  tc_kimlik?: string;
   dogum_tarihi?: Date | string;
   kayit_tarihi?: Date | string;
   telefon?: string;

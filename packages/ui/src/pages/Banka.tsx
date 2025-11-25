@@ -70,7 +70,7 @@ export default function Banka() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-6" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-800">Banka Yönetimi</h1>
       </div>
@@ -101,7 +101,7 @@ export default function Banka() {
           </nav>
         </div>
 
-        <div className="p-6">
+        <div className="p-4" style={{ height: '100%', overflowY: 'auto' }}>
           {activeTab === 'hesaplar' && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

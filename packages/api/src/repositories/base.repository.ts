@@ -14,9 +14,16 @@ export abstract class BaseRepository<T> {
 
   /**
    * Get all records
+   * @param filters - Additional filters to apply
+   * @param subeId - Optional sube ID to filter by (if table has id_sube column)
    */
-  async findAll(filters?: Record<string, any>): Promise<T[]> {
+  async findAll(filters?: Record<string, any>, subeId?: number): Promise<T[]> {
     let query = supabase.from(this.tableName).select('*');
+
+    // Şube filtresi ekle (eğer tabloda id_sube kolonu varsa)
+    if (subeId !== undefined) {
+      query = query.eq('id_sube', subeId);
+    }
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -55,11 +62,20 @@ export abstract class BaseRepository<T> {
 
   /**
    * Create new record
+   * @param entity - Entity data to create
+   * @param subeId - Optional sube ID to set (if table has id_sube column)
    */
-  async create(entity: Partial<T>): Promise<T> {
+  async create(entity: Partial<T>, subeId?: number): Promise<T> {
+    const entityData = { ...entity };
+    
+    // Şube ID ekle (eğer tabloda id_sube kolonu varsa ve entity'de yoksa)
+    if (subeId !== undefined && !('id_sube' in entityData)) {
+      (entityData as any).id_sube = subeId;
+    }
+    
     const { data, error } = await supabase
       .from(this.tableName)
-      .insert(entity)
+      .insert(entityData)
       .select()
       .single();
 

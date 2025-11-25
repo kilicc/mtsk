@@ -11,8 +11,8 @@ export class KursiyerService {
   /**
    * Get all kursiyerler
    */
-  async getAll(filters?: { durum?: number; id_grup?: number }): Promise<Kursiyer[]> {
-    return this.repository.findAll(filters);
+  async getAll(filters?: { durum?: number; id_grup?: number }, subeId?: number): Promise<Kursiyer[]> {
+    return this.repository.findAll(filters, subeId);
   }
 
   /**
@@ -25,16 +25,16 @@ export class KursiyerService {
   /**
    * Create new kursiyer
    */
-  async create(kursiyer: Partial<Kursiyer>): Promise<Kursiyer> {
+  async create(kursiyer: Partial<Kursiyer>, subeId?: number): Promise<Kursiyer> {
     // Validation
     if (!kursiyer.adi || !kursiyer.soyadi) {
       throw new Error('Ad ve soyad zorunludur');
     }
 
-    // Check if TC Kimlik already exists
+    // Check if TC Kimlik already exists (aynı şubede)
     if (kursiyer.tc_kimlik) {
       const existing = await this.repository.findByTcKimlik(kursiyer.tc_kimlik);
-      if (existing) {
+      if (existing && (!subeId || existing.id_sube === subeId)) {
         throw new Error('Bu TC Kimlik numarası ile kayıtlı kursiyer mevcut');
       }
     }
@@ -46,7 +46,7 @@ export class KursiyerService {
       durum: kursiyer.durum ?? 1,
     };
 
-    return this.repository.create(newKursiyer);
+    return this.repository.create(newKursiyer, subeId);
   }
 
   /**

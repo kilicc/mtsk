@@ -1,6 +1,7 @@
 import { SMSGonderim, SMSTemplate, TopluSMS, BorcSMS } from '@mtsk/shared';
 import { FinansService } from './finans.service';
 import { KursiyerRepository } from '../repositories/kursiyer.repository';
+import { SMSTemplateRepository, SMSGonderimRepository } from '../repositories/sms.repository';
 
 /**
  * SMS Service
@@ -11,10 +12,14 @@ import { KursiyerRepository } from '../repositories/kursiyer.repository';
 export class SMSService {
   private finansService: FinansService;
   private kursiyerRepo: KursiyerRepository;
+  private templateRepo: SMSTemplateRepository;
+  private gonderimRepo: SMSGonderimRepository;
 
   constructor() {
     this.finansService = new FinansService();
     this.kursiyerRepo = new KursiyerRepository();
+    this.templateRepo = new SMSTemplateRepository();
+    this.gonderimRepo = new SMSGonderimRepository();
   }
 
   /**
@@ -78,9 +83,14 @@ export class SMSService {
   /**
    * Send debt reminder SMS to kursiyerler with overdue payments
    */
-  async sendDebtReminderSMS(): Promise<{ success: number; failed: number }> {
+  async sendDebtReminderSMS(kursiyerIds?: number[]): Promise<{ success: number; failed: number }> {
     const borcRaporu = await this.finansService.getDebtReport();
-    const gecikmeliBorc = borcRaporu.filter(b => (b.gecikme_gunu || 0) > 0);
+    let gecikmeliBorc = borcRaporu.filter(b => (b.gecikme_gunu || 0) > 0);
+    
+    // Filter by kursiyer_ids if provided
+    if (kursiyerIds && kursiyerIds.length > 0) {
+      gecikmeliBorc = gecikmeliBorc.filter(b => kursiyerIds.includes(b.id_kursiyer));
+    }
 
     if (gecikmeliBorc.length === 0) {
       return { success: 0, failed: 0 };
@@ -175,6 +185,86 @@ export class SMSService {
       return clean;
     }
     return '+90' + clean;
+  }
+
+  // ========== SMS Şablon İşlemleri ==========
+
+  /**
+   * Get all SMS templates
+   */
+  async getAllTemplates(): Promise<SMSTemplate[]> {
+    return this.templateRepo.findAll();
+  }
+
+  /**
+   * Get active SMS templates
+   */
+  async getActiveTemplates(): Promise<SMSTemplate[]> {
+    return this.templateRepo.findActive();
+  }
+
+  /**
+   * Get template by ID
+   */
+  async getTemplateById(id: number): Promise<SMSTemplate | null> {
+    return this.templateRepo.findById(id);
+  }
+
+  /**
+   * Create SMS template
+   */
+  async createTemplate(template: Partial<SMSTemplate>): Promise<SMSTemplate> {
+    if (!template.baslik || !template.icerik) {
+      throw new Error('Başlık ve içerik zorunludur');
+    }
+    return this.templateRepo.create(template);
+  }
+
+  /**
+   * Update SMS template
+   */
+  async updateTemplate(id: number, updates: Partial<SMSTemplate>): Promise<SMSTemplate> {
+    return this.templateRepo.update(id, updates);
+  }
+
+  /**
+   * Delete SMS template
+   */
+  async deleteTemplate(id: number): Promise<boolean> {
+    return this.templateRepo.delete(id);
+  }
+
+  // ========== SMS Rapor İşlemleri ==========
+
+  /**
+   * Get all SMS reports
+   */
+  async getAllReports(filters?: {
+    id_kursiyer?: number;
+    durum?: number;
+    baslangic_tarihi?: string;
+    bitis_tarihi?: string;
+  }): Promise<SMSGonderim[]> {
+    if (filters?.baslangic_tarihi && filters?.bitis_tarihi) {
+      return this.gonderimRepo.findByDateRange(filters.baslangic_tarihi, filters.bitis_tarihi);
+    }
+    if (filters?.durum !== undefined) {
+      return this.gonderimRepo.findByStatus(filters.durum);
+    }
+    if (filters?.id_kursiyer) {
+      return this.gonderimRepo.findByKursiyer(filters.id_kursiyer);
+    }
+    return this.gonderimRepo.findAll();
+  }
+
+  /**
+   * Save SMS record (called after sending SMS)
+   */
+  async saveSMSRecord(sms: Partial<SMSGonderim>): Promise<SMSGonderim> {
+    return this.gonderimRepo.create({
+      ...sms,
+      gonderim_tarihi: sms.gonderim_tarihi || new Date().toISOString(),
+    });
   }
 }
 

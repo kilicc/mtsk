@@ -15,8 +15,10 @@ export interface Kursiyer {
   durum: number;
   id_grup?: number;
   id_referans?: number;
+  id_sube?: number;
   notlar?: string;
   foto?: string;
+  foto_url?: string | null;
   silme_tarihi?: Date | string;
 }
 

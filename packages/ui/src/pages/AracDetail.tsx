@@ -44,7 +44,7 @@ export default function AracDetail({ id, onBack }: AracDetailProps) {
 
   if (!arac) {
     return (
-      <div className="p-6">
+      <div className="p-4" style={{ height: '100%', overflowY: 'auto' }}>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-800">Araç bulunamadı</p>
           <button onClick={onBack} className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
@@ -56,7 +56,7 @@ export default function AracDetail({ id, onBack }: AracDetailProps) {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-6" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="flex items-center justify-between mb-6">
         <div>
           <button onClick={onBack} className="text-blue-600 hover:text-blue-800 mb-2 flex items-center gap-2">

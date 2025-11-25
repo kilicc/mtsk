@@ -190,5 +190,87 @@ router.get('/borc', async (req, res) => {
   }
 });
 
+// ========== Ödeme Planı Routes ==========
+
+/**
+ * GET /api/finans/odeme-plani
+ * Get all payment plans
+ */
+router.get('/odeme-plani', async (req, res) => {
+  try {
+    const { id_kursiyer } = req.query;
+    const filters: any = {};
+    
+    if (id_kursiyer) filters.id_kursiyer = parseInt(id_kursiyer as string);
+
+    const plans = await finansService.getAllOdemePlani(filters);
+    res.json(plans);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET /api/finans/odeme-plani/kursiyer/:id
+ * Get payment plans by kursiyer
+ */
+router.get('/odeme-plani/kursiyer/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid kursiyer ID' });
+    }
+
+    const plans = await finansService.getOdemePlaniByKursiyer(id);
+    res.json(plans);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/finans/odeme-plani
+ * Create payment plan
+ */
+router.post('/odeme-plani', async (req, res) => {
+  try {
+    const { id_kursiyer, taksit_sayisi, toplam_tutar, baslangic_tarihi } = req.body;
+
+    if (!id_kursiyer || !taksit_sayisi || !toplam_tutar || !baslangic_tarihi) {
+      return res.status(400).json({ error: 'Tüm alanlar zorunludur' });
+    }
+
+    const plans = await finansService.createOdemePlani({
+      id_kursiyer: parseInt(id_kursiyer),
+      taksit_sayisi: parseInt(taksit_sayisi),
+      toplam_tutar: parseFloat(toplam_tutar),
+      baslangic_tarihi,
+    });
+
+    res.status(201).json(plans);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+/**
+ * POST /api/finans/odeme-plani/:id/odeme
+ * Mark payment plan installment as paid
+ */
+router.post('/odeme-plani/:id/odeme', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
+
+    const { odeme_tarihi } = req.body;
+    const plan = await finansService.markOdemePlaniAsPaid(id, odeme_tarihi);
+    res.json(plan);
+  } catch (error: any) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 export default router;
 

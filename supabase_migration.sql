@@ -3,6 +3,76 @@
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Fix: Mevcut tablolara eksik PRIMARY KEY'leri ekle (yeni tablolar oluşturulmadan önce)
+DO $$
+BEGIN
+    -- Kursiyer tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'kursiyer') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_kursiyer' 
+            AND conrelid = 'kursiyer'::regclass
+        ) THEN
+            ALTER TABLE kursiyer ADD CONSTRAINT pk_kursiyer PRIMARY KEY (id);
+        END IF;
+    END IF;
+
+    -- Muhasebe tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'muhasebe') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_muhasebe' 
+            AND conrelid = 'muhasebe'::regclass
+        ) THEN
+            ALTER TABLE muhasebe ADD CONSTRAINT pk_muhasebe PRIMARY KEY (id);
+        END IF;
+    END IF;
+
+    -- Personel tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'personel') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_personel' 
+            AND conrelid = 'personel'::regclass
+        ) THEN
+            ALTER TABLE personel ADD CONSTRAINT pk_personel PRIMARY KEY (id);
+        END IF;
+    END IF;
+
+    -- Cari_firma tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'cari_firma') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_cari_firma' 
+            AND conrelid = 'cari_firma'::regclass
+        ) THEN
+            ALTER TABLE cari_firma ADD CONSTRAINT pk_cari_firma PRIMARY KEY (id);
+        END IF;
+    END IF;
+
+    -- Banka_hesabi tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'banka_hesabi') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_banka_hesabi' 
+            AND conrelid = 'banka_hesabi'::regclass
+        ) THEN
+            ALTER TABLE banka_hesabi ADD CONSTRAINT pk_banka_hesabi PRIMARY KEY (id);
+        END IF;
+    END IF;
+
+    -- Hizmet tablosuna PRIMARY KEY ekle (eğer yoksa)
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'hizmet') THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint 
+            WHERE conname = 'pk_hizmet' 
+            AND conrelid = 'hizmet'::regclass
+        ) THEN
+            ALTER TABLE hizmet ADD CONSTRAINT pk_hizmet PRIMARY KEY (id);
+        END IF;
+    END IF;
+END $$;
+
 -- Table: appointments
 CREATE TABLE IF NOT EXISTS appointments (
     uniqueid SERIAL,
@@ -946,7 +1016,8 @@ CREATE TABLE IF NOT EXISTS kursiyer (
     direksiyon_saat INTEGER,
     yuz_yirmi_bes_cc BOOLEAN,
     resim_webcam TEXT,
-    simulator_notu INTEGER
+    simulator_notu INTEGER,
+    CONSTRAINT pk_kursiyer PRIMARY KEY (id)
 );
 
 -- Table: kursiyer_direksiyon
@@ -2137,4 +2208,171 @@ CREATE TABLE IF NOT EXISTS gorusme_kontrol (
     kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_gorusme_kontrol PRIMARY KEY (id)
 );
+
+-- Eksik Tablolar - Modül Tamamlama İçin
+-- Bu dosya supabase_migration.sql'e eklenecek
+
+-- Table: sinav_notlari (Exam Grades)
+CREATE TABLE IF NOT EXISTS sinav_notlari (
+    id SERIAL,
+    id_kursiyer INTEGER NOT NULL,
+    id_sinav_tarihi INTEGER,
+    sinav_turu VARCHAR(20) NOT NULL CHECK (sinav_turu IN ('teorik', 'uygulama', 'direksiyon')),
+    sinav_notu INTEGER,
+    sinav_durumu VARCHAR(20) CHECK (sinav_durumu IN ('gecti', 'kaldi', 'beklemede')),
+    sinav_tarihi DATE NOT NULL,
+    kaynak VARCHAR(20) CHECK (kaynak IN ('mebbisten', 'sistemden')),
+    aciklama TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP,
+    CONSTRAINT pk_sinav_notlari PRIMARY KEY (id),
+    CONSTRAINT fk_sinav_notlari_kursiyer FOREIGN KEY (id_kursiyer) REFERENCES kursiyer(id)
+);
+
+-- Table: kasa (Cash Register)
+CREATE TABLE IF NOT EXISTS kasa (
+    id SERIAL,
+    kasa_adi VARCHAR(255) NOT NULL,
+    kasa_kodu VARCHAR(50),
+    bakiye DECIMAL(15, 2) DEFAULT 0,
+    aciklama TEXT,
+    akt INTEGER DEFAULT 1,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kasa PRIMARY KEY (id)
+);
+
+-- Table: kasa_islemi (Cash Register Transactions)
+CREATE TABLE IF NOT EXISTS kasa_islemi (
+    id SERIAL,
+    id_kasa INTEGER NOT NULL,
+    islem_tarihi DATE NOT NULL,
+    islem_tipi VARCHAR(10) NOT NULL CHECK (islem_tipi IN ('giris', 'cikis')),
+    tutar DECIMAL(15, 2) NOT NULL,
+    aciklama TEXT,
+    id_kursiyer INTEGER,
+    id_fatura INTEGER,
+    id_personel INTEGER,
+    odeme_yontemi VARCHAR(50), -- 'nakit', 'kredi_karti', 'banka', 'havale', 'cek'
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kasa_islemi PRIMARY KEY (id),
+    CONSTRAINT fk_kasa_islemi_kasa FOREIGN KEY (id_kasa) REFERENCES kasa(id)
+);
+
+-- Table: kasa_transfer (Cash Transfer Between Registers)
+CREATE TABLE IF NOT EXISTS kasa_transfer (
+    id SERIAL,
+    id_kaynak_kasa INTEGER NOT NULL,
+    id_hedef_kasa INTEGER NOT NULL,
+    transfer_tarihi DATE NOT NULL,
+    tutar DECIMAL(15, 2) NOT NULL,
+    aciklama TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kasa_transfer PRIMARY KEY (id),
+    CONSTRAINT fk_kasa_transfer_kaynak FOREIGN KEY (id_kaynak_kasa) REFERENCES kasa(id),
+    CONSTRAINT fk_kasa_transfer_hedef FOREIGN KEY (id_hedef_kasa) REFERENCES kasa(id)
+);
+
+-- Table: fatura (General Invoice)
+CREATE TABLE IF NOT EXISTS fatura (
+    id SERIAL,
+    fatura_no VARCHAR(50) UNIQUE NOT NULL,
+    fatura_tipi VARCHAR(20) NOT NULL CHECK (fatura_tipi IN ('satis', 'alis', 'satis_iade', 'alis_iade')),
+    fatura_tarihi DATE NOT NULL,
+    id_cari_firma INTEGER,
+    id_kursiyer INTEGER,
+    toplam_tutar DECIMAL(15, 2) NOT NULL,
+    kdv_orani INTEGER DEFAULT 18,
+    kdv_tutari DECIMAL(15, 2) DEFAULT 0,
+    iskonto_orani INTEGER DEFAULT 0,
+    iskonto_tutari DECIMAL(15, 2) DEFAULT 0,
+    genel_toplam DECIMAL(15, 2) NOT NULL,
+    durum VARCHAR(20) DEFAULT 'acik' CHECK (durum IN ('acik', 'kapali', 'iptal')),
+    e_fatura_durumu VARCHAR(20) DEFAULT 'beklemede' CHECK (e_fatura_durumu IN ('beklemede', 'gonderildi', 'hata')),
+    e_fatura_uuid VARCHAR(100),
+    aciklama TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    guncelleme_tarihi TIMESTAMP,
+    CONSTRAINT pk_fatura PRIMARY KEY (id),
+    CONSTRAINT fk_fatura_cari FOREIGN KEY (id_cari_firma) REFERENCES cari_firma(id),
+    CONSTRAINT fk_fatura_kursiyer FOREIGN KEY (id_kursiyer) REFERENCES kursiyer(id)
+);
+
+-- Table: fatura_detay (Invoice Details)
+CREATE TABLE IF NOT EXISTS fatura_detay (
+    id SERIAL,
+    id_fatura INTEGER NOT NULL,
+    id_hizmet INTEGER,
+    hizmet_adi VARCHAR(255),
+    miktar INTEGER DEFAULT 1,
+    birim_fiyat DECIMAL(15, 2) NOT NULL,
+    tutar DECIMAL(15, 2) NOT NULL,
+    kdv_orani INTEGER DEFAULT 18,
+    kdv_tutari DECIMAL(15, 2) DEFAULT 0,
+    aciklama TEXT,
+    CONSTRAINT pk_fatura_detay PRIMARY KEY (id),
+    CONSTRAINT fk_fatura_detay_fatura FOREIGN KEY (id_fatura) REFERENCES fatura(id) ON DELETE CASCADE,
+    CONSTRAINT fk_fatura_detay_hizmet FOREIGN KEY (id_hizmet) REFERENCES hizmet(id)
+);
+
+-- Table: e_fatura_log (E-Invoice Logs)
+CREATE TABLE IF NOT EXISTS e_fatura_log (
+    id SERIAL,
+    id_fatura INTEGER NOT NULL,
+    islem_tipi VARCHAR(50), -- 'gonderim', 'iptal', 'guncelleme'
+    durum VARCHAR(20), -- 'basarili', 'hata', 'beklemede'
+    hata_mesaji TEXT,
+    yanit_xml TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_e_fatura_log PRIMARY KEY (id),
+    CONSTRAINT fk_e_fatura_log_fatura FOREIGN KEY (id_fatura) REFERENCES fatura(id)
+);
+
+-- Table: odeme_plani (Payment Plan)
+CREATE TABLE IF NOT EXISTS odeme_plani (
+    id SERIAL,
+    id_kursiyer INTEGER NOT NULL,
+    taksit_no INTEGER NOT NULL,
+    taksit_adi VARCHAR(100),
+    son_odeme_tarihi DATE NOT NULL,
+    tutar DECIMAL(15, 2) NOT NULL,
+    odeme_yontemi VARCHAR(50),
+    durum VARCHAR(20) DEFAULT 'beklemede' CHECK (durum IN ('odendi', 'beklemede', 'gecikti')),
+    odeme_tarihi DATE,
+    id_kasa INTEGER,
+    id_banka INTEGER,
+    aciklama TEXT,
+    kayit_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_odeme_plani PRIMARY KEY (id),
+    CONSTRAINT fk_odeme_plani_kursiyer FOREIGN KEY (id_kursiyer) REFERENCES kursiyer(id)
+);
+
+-- Table: kursiyer_bakiye (Student Balance)
+CREATE TABLE IF NOT EXISTS kursiyer_bakiye (
+    id SERIAL,
+    id_kursiyer INTEGER NOT NULL UNIQUE,
+    borc DECIMAL(15, 2) DEFAULT 0,
+    alacak DECIMAL(15, 2) DEFAULT 0,
+    bakiye DECIMAL(15, 2) GENERATED ALWAYS AS (alacak - borc) STORED,
+    hesap_turu VARCHAR(50), -- 'Kurs Ücreti', 'Teorik Sınav Ücreti', 'Uygulama Sınav Ücreti', 'Diğer'
+    bakiye_turu VARCHAR(20) GENERATED ALWAYS AS (
+        CASE 
+            WHEN (alacak - borc) > 0 THEN 'alacak'
+            WHEN (alacak - borc) < 0 THEN 'borc'
+            ELSE 'sifir'
+        END
+    ) STORED,
+    guncelleme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_kursiyer_bakiye PRIMARY KEY (id),
+    CONSTRAINT fk_kursiyer_bakiye_kursiyer FOREIGN KEY (id_kursiyer) REFERENCES kursiyer(id)
+);
+
+-- Indexes for performance
+CREATE INDEX IF NOT EXISTS idx_sinav_notlari_kursiyer ON sinav_notlari(id_kursiyer);
+CREATE INDEX IF NOT EXISTS idx_sinav_notlari_tarih ON sinav_notlari(sinav_tarihi);
+CREATE INDEX IF NOT EXISTS idx_kasa_islemi_kasa ON kasa_islemi(id_kasa);
+CREATE INDEX IF NOT EXISTS idx_kasa_islemi_tarih ON kasa_islemi(islem_tarihi);
+CREATE INDEX IF NOT EXISTS idx_fatura_tarih ON fatura(fatura_tarihi);
+CREATE INDEX IF NOT EXISTS idx_fatura_durum ON fatura(durum);
+CREATE INDEX IF NOT EXISTS idx_odeme_plani_kursiyer ON odeme_plani(id_kursiyer);
+CREATE INDEX IF NOT EXISTS idx_odeme_plani_durum ON odeme_plani(durum);
 

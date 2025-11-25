@@ -1,58 +1,50 @@
-import { useState } from 'react';
+interface TanimlarProps {
+  onPageChange?: (page: any) => void;
+}
 
-export default function Tanimlar() {
-  const [activeCategory, setActiveCategory] = useState<string>('genel');
-
+export default function Tanimlar({ onPageChange }: TanimlarProps) {
   const categories = [
-    { id: 'genel', name: 'Genel Tanımlar', icon: '⚙️' },
-    { id: 'arac', name: 'Araç Tanımları', icon: '🚗' },
-    { id: 'personel', name: 'Personel Tanımları', icon: '👔' },
-    { id: 'ders', name: 'Ders Tanımları', icon: '📚' },
-    { id: 'evrak', name: 'Evrak Tanımları', icon: '📄' },
-    { id: 'finans', name: 'Finans Tanımları', icon: '💰' },
+    { id: 'donem-sube-tanimlama', name: 'Dönem Şube Tanımlama', icon: '📅', description: 'Dönem ve şube tanımları' },
+    { id: 'sinav-tarihi-tanimlama', name: 'Sınav Tarihi Tanımlama', icon: '📝', description: 'Sınav tarihleri tanımları' },
+    { id: 'genel', name: 'Genel Tanımlar', icon: '⚙️', description: 'Genel sistem tanımları' },
+    { id: 'arac', name: 'Araç Tanımları', icon: '🚗', description: 'Araç tanımları' },
+    { id: 'personel', name: 'Personel Tanımları', icon: '👔', description: 'Personel tanımları' },
+    { id: 'ders', name: 'Ders Tanımları', icon: '📚', description: 'Ders tanımları' },
+    { id: 'evrak', name: 'Evrak Tanımları', icon: '📄', description: 'Evrak tanımları' },
+    { id: 'finans', name: 'Finans Tanımları', icon: '💰', description: 'Finans tanımları' },
   ];
 
+  const handleCategoryClick = (categoryId: string) => {
+    if (onPageChange && (categoryId === 'donem-sube-tanimlama' || categoryId === 'sinav-tarihi-tanimlama')) {
+      onPageChange(categoryId as any);
+    }
+  };
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4" style={{ height: '100%', overflowY: 'auto' }}>
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Tanımlar</h1>
         <p className="text-gray-600 mt-1">Sistem parametreleri ve tanımları yönetin</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {categories.map((category) => (
           <div
             key={category.id}
-            onClick={() => setActiveCategory(category.id)}
-            className={`bg-white rounded-xl shadow-lg p-6 cursor-pointer transition-all ${
-              activeCategory === category.id
-                ? 'border-2 border-blue-500 shadow-xl'
+            onClick={() => handleCategoryClick(category.id)}
+            className={`bg-white rounded-lg shadow p-6 cursor-pointer transition-all ${
+              category.id === 'donem-sube-tanimlama' || category.id === 'sinav-tarihi-tanimlama'
+                ? 'border-2 border-gray-300 hover:border-gray-500'
                 : 'border-2 border-transparent hover:border-gray-300'
             }`}
           >
-            <div className="flex items-center gap-4">
-              <div className="text-4xl">{category.icon}</div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-800">{category.name}</h3>
-                <p className="text-sm text-gray-500 mt-1">Tanımları görüntüle ve düzenle</p>
-              </div>
+            <div className="flex flex-col items-center text-center">
+              <div className="text-4xl mb-3">{category.icon}</div>
+              <h3 className="text-lg font-bold text-gray-800 mb-1">{category.name}</h3>
+              <p className="text-sm text-gray-500">{category.description}</p>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">
-          {categories.find(c => c.id === activeCategory)?.name}
-        </h2>
-        <div className="text-center py-12 text-gray-500">
-          {activeCategory === 'genel' && 'Genel tanımlar yakında eklenecek...'}
-          {activeCategory === 'arac' && 'Araç tanımları yakında eklenecek...'}
-          {activeCategory === 'personel' && 'Personel tanımları yakında eklenecek...'}
-          {activeCategory === 'ders' && 'Ders tanımları yakında eklenecek...'}
-          {activeCategory === 'evrak' && 'Evrak tanımları yakında eklenecek...'}
-          {activeCategory === 'finans' && 'Finans tanımları yakında eklenecek...'}
-        </div>
       </div>
     </div>
   );

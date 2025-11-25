@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { type Page } from '../components/TopMenu';
 
 const API_URL = 'http://localhost:3001/api';
 
@@ -8,20 +9,30 @@ interface DashboardStats {
   bugunDogumGunu: number;
   eksikEvrak: number;
   yaklasanDersler: number;
-  toplamArac: number;
-  toplamPersonel: number;
-  sonYedekleme?: string;
+  kalanSMS: number;
 }
 
-export default function Dashboard() {
+interface DashboardTile {
+  id: string;
+  label: string;
+  icon: string;
+  color: string;
+  page?: Page;
+  value?: string | number;
+}
+
+interface DashboardProps {
+  onPageChange?: (page: Page) => void;
+}
+
+export default function Dashboard({ onPageChange }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats>({
     toplamKursiyer: 0,
     aktifKursiyer: 0,
     bugunDogumGunu: 0,
     eksikEvrak: 0,
     yaklasanDersler: 0,
-    toplamArac: 0,
-    toplamPersonel: 0,
+    kalanSMS: 8610,
   });
   const [loading, setLoading] = useState(true);
 
@@ -33,24 +44,17 @@ export default function Dashboard() {
     try {
       setLoading(true);
       
-      // Parallel API calls
-      const [kursiyerler, dogumGunu, eksikEvrak, yaklasanDersler, araclar, personel] = await Promise.all([
-        fetch(`${API_URL}/kursiyer`).then(r => r.json()),
-        fetch(`${API_URL}/dogum-gunu/bugun`).then(r => r.json()).catch(() => []),
-        fetch(`${API_URL}/eksik-evrak/rapor`).then(r => r.json()).catch(() => []),
-        fetch(`${API_URL}/kurumsal-ders-programi/yaklasan?days=7`).then(r => r.json()).catch(() => []),
-        fetch(`${API_URL}/arac-personel/arac`).then(r => r.json()).catch(() => []),
-        fetch(`${API_URL}/arac-personel/personel`).then(r => r.json()).catch(() => []),
+      const [kursiyerler] = await Promise.all([
+        fetch(`${API_URL}/kursiyer`).then(r => r.json()).catch(() => []),
       ]);
 
       setStats({
         toplamKursiyer: kursiyerler?.length || 0,
-        aktifKursiyer: kursiyerler?.filter((k: any) => k.akt === 1)?.length || 0,
-        bugunDogumGunu: dogumGunu?.length || 0,
-        eksikEvrak: eksikEvrak?.length || 0,
-        yaklasanDersler: yaklasanDersler?.length || 0,
-        toplamArac: araclar?.length || 0,
-        toplamPersonel: personel?.length || 0,
+        aktifKursiyer: kursiyerler?.filter((k: any) => k.akt === 1 || k.durum === 1)?.length || 0,
+        bugunDogumGunu: 0,
+        eksikEvrak: 0,
+        yaklasanDersler: 0,
+        kalanSMS: 8610,
       });
     } catch (error) {
       console.error('Error loading dashboard:', error);
@@ -59,155 +63,110 @@ export default function Dashboard() {
     }
   };
 
-  const statCards = [
-    { label: 'Toplam Kursiyer', value: stats.toplamKursiyer, icon: '👥', color: 'bg-blue-500' },
-    { label: 'Aktif Kursiyer', value: stats.aktifKursiyer, icon: '✅', color: 'bg-green-500' },
-    { label: 'Bugün Doğum Günü', value: stats.bugunDogumGunu, icon: '🎂', color: 'bg-pink-500' },
-    { label: 'Eksik Evrak', value: stats.eksikEvrak, icon: '📄', color: 'bg-orange-500' },
-    { label: 'Yaklaşan Dersler', value: stats.yaklasanDersler, icon: '📅', color: 'bg-purple-500' },
-    { label: 'Toplam Araç', value: stats.toplamArac, icon: '🚗', color: 'bg-indigo-500' },
-    { label: 'Toplam Personel', value: stats.toplamPersonel, icon: '👔', color: 'bg-teal-500' },
+  // Büyük kare butonlar - görüntülere göre renkler ve boyutlar
+  const tiles: (DashboardTile & { span?: number })[] = [
+    { id: 'yeni-kursiyer', label: 'YENİ KURSİYER KARTI', icon: '👤', color: 'bg-orange-500', page: 'kursiyer-on-kayit', span: 2 },
+    { id: 'kurumsal-direksiyon', label: 'KURUMSAL DİREKSİYON DERS PROGRAMI', icon: '📅', color: 'bg-gray-600', page: 'kurumsal-ders-programi', span: 2 },
+    { id: 'kasa', label: 'KASA İŞLEMLERİ', icon: '💰', color: 'bg-green-500', page: 'kasa-listesi' },
+    { id: 'takvim', label: 'TAKVİM', icon: '📆', color: 'bg-amber-700', page: 'dashboard' },
+    { id: 'kursiyer-ara', label: 'KURSİYER ARA', icon: '🔍', color: 'bg-blue-500', page: 'kursiyer' },
+    { id: 'mebbis-aktarim', label: 'MEBBİS AKTARIM', icon: '📤', color: 'bg-amber-700', page: 'kursiyer-toplu-mebbis' },
+    { id: 'teorik-ders', label: 'TEORİK DERS PROGRAMI', icon: '📚', color: 'bg-red-500', page: 'ders-programi-teorik' },
+    { id: 'direksiyon-ders', label: 'DİREKSİYON DERS PROGRAMI', icon: '🚗', color: 'bg-blue-500', page: 'ders-programi-uygulama' },
+    { id: 'toplu-sms', label: 'TOPLU SMS', icon: '📱', color: 'bg-orange-500', page: 'sms' },
+    { id: 'kalan-sms', label: 'KALAN SMS', icon: '📱', color: 'bg-purple-500', value: stats.kalanSMS },
+    { id: 'grup-donem', label: 'GRUP/DÖNEM KARTI', icon: '📁', color: 'bg-pink-500', page: 'tanimlar' },
+    { id: 'subeler-arasi', label: 'ŞUBELER ARASI AKTARIM', icon: '🔄', color: 'bg-purple-300', page: 'kursiyer' },
+    { id: 'e-sinav', label: 'E-SINAV LİSTESİ', icon: '💻', color: 'bg-blue-500', page: 'kursiyer-sinav-listesi' },
+    { id: 'direksiyon-sinav', label: 'DİREKSİYON SINAV LİSTESİ', icon: '⏰', color: 'bg-orange-500', page: 'kursiyer-sinav-listesi' },
+    { id: 'aktif-kursiyer', label: 'AKTİF KURSİYER', icon: '👥', color: 'bg-lime-400', value: stats.aktifKursiyer },
+    { id: 'yedek-al', label: 'YEDEK AL', icon: '💾', color: 'bg-red-500', page: 'yedekleme' },
   ];
+
+  const handleTileClick = (tile: DashboardTile) => {
+    if (tile.page && onPageChange) {
+      onPageChange(tile.page);
+    }
+  };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center h-screen bg-gray-800">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-white"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
-        <p className="text-gray-600">Sistem özet bilgileri ve istatistikler</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((card, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-200 hover:scale-105 hover:shadow-xl"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm font-medium mb-1">{card.label}</p>
-                <p className="text-3xl font-bold text-gray-800">{card.value}</p>
-              </div>
-              <div className={`${card.color} w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-lg`}>
-                {card.icon}
+    <div className="h-screen bg-black text-white overflow-hidden">
+      {/* Ana İçerik Alanı */}
+      <div className="flex h-full" style={{ paddingTop: '220px' }}>
+        {/* Sol Panel - Başlık ve Logolar */}
+        <div className="w-64 bg-gray-800 border-r-2 border-gray-700 p-4 flex flex-col items-center justify-start overflow-hidden" style={{ height: 'calc(100vh - 220px)' }}>
+          <div className="text-center mb-3">
+            <h1 className="text-xl font-bold mb-1 text-white">SÜRÜCÜ KURSU</h1>
+            <h2 className="text-sm font-semibold text-gray-300">Otomasyonu</h2>
+          </div>
+          
+          {/* Milli Eğitim Bakanlığı Logosu */}
+          <div className="mb-3 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-lg border-2 border-gray-300">
+              <div className="text-center">
+                <div className="text-sm font-bold text-gray-800 mb-0.5">T.C.</div>
+                <div className="text-[8px] font-semibold text-gray-800">MİLLÎ EĞİTİM</div>
+                <div className="text-[8px] font-semibold text-gray-800">BAKANLIĞI</div>
               </div>
             </div>
           </div>
-        ))}
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-        {/* Not Defteri Widget */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Not Defteri</h2>
-            <span className="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">
-              {0}
-            </span>
-          </div>
-          <div className="space-y-2">
-            <input
-              type="text"
-              placeholder="Yeni not yaz (Enter ile kaydet)"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  // TODO: Not kaydet
-                  console.log('Not kaydedilecek');
-                }
-              }}
-            />
-            <div className="text-center py-4 text-gray-500 text-sm">
-              Henüz not kaydı bulunmamaktadır.
+          {/* Logo */}
+          <div className="mt-auto">
+            <div className="text-center text-gray-400 text-[10px]">
+              <div className="font-semibold mb-0.5">MTSK</div>
+              <div className="text-[8px]">Otomasyon Sistemi</div>
             </div>
           </div>
         </div>
 
-        {/* Vade Tarihi Widget */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Vade Tarihi</h2>
-            <span className="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">
-              {0}
-            </span>
-          </div>
-          <div className="space-y-2">
-            <div className="text-center py-4 text-gray-500 text-sm">
-              Yaklaşan vade tarihi bulunmamaktadır.
-            </div>
-          </div>
-        </div>
-
-        {/* Görüşme Kontrol Widget */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-800">Görüşme Kontrol</h2>
-            <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">
-              {0}
-            </span>
-          </div>
-          <div className="space-y-2">
-            <div className="text-center py-4 text-gray-500 text-sm">
-              Bekleyen görüşme bulunmamaktadır.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Hızlı İşlemler</h2>
-          <div className="space-y-3">
-            <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-              Yeni Kursiyer Ekle
-            </button>
-            <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium">
-              Ön Kayıt Ekle
-            </button>
-            <button className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition-colors font-medium">
-              SMS Gönder
-            </button>
-            <button className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 transition-colors font-medium">
-              Yedekleme Yap
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Son Aktiviteler</h2>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">👥</div>
-              <div>
-                <p className="font-medium text-gray-800">Yeni kursiyer eklendi</p>
-                <p className="text-sm text-gray-500">2 saat önce</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">💬</div>
-              <div>
-                <p className="font-medium text-gray-800">SMS gönderildi</p>
-                <p className="text-sm text-gray-500">5 saat önce</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">📅</div>
-              <div>
-                <p className="font-medium text-gray-800">Ders programı güncellendi</p>
-                <p className="text-sm text-gray-500">1 gün önce</p>
-              </div>
-            </div>
+        {/* Sağ Panel - Dashboard Tiles */}
+        <div className="flex-1 bg-black overflow-hidden" style={{ height: 'calc(100vh - 220px)' }}>
+          <div className="grid grid-cols-4 gap-1.5 p-2 h-full overflow-hidden">
+            {tiles.map((tile) => {
+              const span = tile.span || 1;
+              return (
+                <button
+                  key={tile.id}
+                  onClick={() => handleTileClick(tile)}
+                  className={`${tile.color} rounded-lg p-2 text-white shadow-xl transform transition-all duration-200 hover:scale-[1.02] hover:shadow-2xl flex flex-col items-start justify-between relative border-0 hover:brightness-110`}
+                  style={{ 
+                    gridColumn: `span ${span}`,
+                    gridRow: span === 2 ? 'span 2' : 'span 1',
+                    height: '100%',
+                    backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
+                  }}
+                >
+                  {/* Metin - Üstte */}
+                  <div className="text-left w-full">
+                    <div className="text-[9px] font-bold leading-tight uppercase">{tile.label}</div>
+                  </div>
+                  
+                  {/* İkon veya Değer - Altta */}
+                  <div className="w-full flex items-end justify-center mt-auto">
+                    {tile.value !== undefined ? (
+                      <div className="text-2xl font-extrabold">{tile.value}</div>
+                    ) : (
+                      <div className="text-3xl opacity-90">{tile.icon}</div>
+                    )}
+                  </div>
+                  
+                  {/* Hover efekti için overlay */}
+                  <div className="absolute inset-0 bg-white/0 hover:bg-white/10 rounded-lg transition-all duration-200"></div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
   );
 }
-

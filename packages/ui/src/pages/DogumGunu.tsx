@@ -52,7 +52,7 @@ export default function DogumGunu() {
   const activeList = getActiveList();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-6" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">🎂 Doğum Günü Takibi</h1>
         <p className="text-gray-600">Kursiyer doğum günleri ve yaklaşan kutlamalar</p>

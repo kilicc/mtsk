@@ -1,13 +1,15 @@
-import { MuhasebeRepository, KursiyerFaturaRepository } from '../repositories/finans.repository';
+import { MuhasebeRepository, KursiyerFaturaRepository, OdemePlaniRepository } from '../repositories/finans.repository';
 import { Muhasebe, KursiyerFatura, OdemePlani, BorcRaporu, KasaRaporu } from '@mtsk/shared';
 
 export class FinansService {
   private muhasebeRepo: MuhasebeRepository;
   private faturaRepo: KursiyerFaturaRepository;
+  private odemePlaniRepo: OdemePlaniRepository;
 
   constructor() {
     this.muhasebeRepo = new MuhasebeRepository();
     this.faturaRepo = new KursiyerFaturaRepository();
+    this.odemePlaniRepo = new OdemePlaniRepository();
   }
 
   // ========== Muhasebe (Ödeme) İşlemleri ==========
@@ -209,6 +211,75 @@ export class FinansService {
     });
 
     return Array.from(debtMap.values());
+  }
+
+  // ========== Ödeme Planı İşlemleri ==========
+
+  /**
+   * Get all payment plans
+   */
+  async getAllOdemePlani(filters?: { id_kursiyer?: number }): Promise<OdemePlani[]> {
+    if (filters?.id_kursiyer) {
+      return this.odemePlaniRepo.findByKursiyer(filters.id_kursiyer);
+    }
+    return this.odemePlaniRepo.findAll();
+  }
+
+  /**
+   * Get payment plan by ID
+   */
+  async getOdemePlaniById(id: number): Promise<OdemePlani | null> {
+    return this.odemePlaniRepo.findById(id);
+  }
+
+  /**
+   * Get payment plans by kursiyer
+   */
+  async getOdemePlaniByKursiyer(idKursiyer: number): Promise<OdemePlani[]> {
+    return this.odemePlaniRepo.findByKursiyer(idKursiyer);
+  }
+
+  /**
+   * Create payment plan (multiple installments)
+   */
+  async createOdemePlani(params: {
+    id_kursiyer: number;
+    taksit_sayisi: number;
+    toplam_tutar: number;
+    baslangic_tarihi: string;
+  }): Promise<OdemePlani[]> {
+    const { id_kursiyer, taksit_sayisi, toplam_tutar, baslangic_tarihi } = params;
+
+    if (taksit_sayisi <= 0) {
+      throw new Error('Taksit sayısı 0\'dan büyük olmalıdır');
+    }
+
+    const taksitTutari = toplam_tutar / taksit_sayisi;
+    const baslangic = new Date(baslangic_tarihi);
+    const planItems: Partial<OdemePlani>[] = [];
+
+    // Her ay için bir taksit oluştur
+    for (let i = 1; i <= taksit_sayisi; i++) {
+      const vadeTarihi = new Date(baslangic);
+      vadeTarihi.setMonth(vadeTarihi.getMonth() + (i - 1));
+
+      planItems.push({
+        id_kursiyer,
+        taksit_no: i,
+        tutar: taksitTutari,
+        vade_tarihi: vadeTarihi.toISOString().split('T')[0],
+        odeme_durumu: 0,
+      });
+    }
+
+    return this.odemePlaniRepo.createPlanItems(planItems);
+  }
+
+  /**
+   * Mark payment plan installment as paid
+   */
+  async markOdemePlaniAsPaid(id: number, odemeTarihi?: Date | string): Promise<OdemePlani> {
+    return this.odemePlaniRepo.markAsPaid(id, odemeTarihi);
   }
 }
 

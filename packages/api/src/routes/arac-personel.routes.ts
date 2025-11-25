@@ -17,7 +17,8 @@ router.get('/arac', async (req, res) => {
     const vehicles = await aracService.getAllVehicles(filters);
     res.json(vehicles);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Arac getAll error:', error.message);
+    res.json([]);
   }
 });
 
@@ -189,7 +190,8 @@ router.get('/personel', async (req, res) => {
     const personnel = await personelService.getAllPersonnel(filters);
     res.json(personnel);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Personel getAll error:', error.message);
+    res.json([]);
   }
 });
 

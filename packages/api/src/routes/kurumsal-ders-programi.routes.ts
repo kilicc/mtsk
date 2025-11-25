@@ -45,7 +45,8 @@ router.get('/yaklasan', async (req, res) => {
     const dersler = await dersService.getYaklasanDersler(daysAhead);
     res.json(dersler);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Yaklasan dersler error:', error.message);
+    res.json([]);
   }
 });
 

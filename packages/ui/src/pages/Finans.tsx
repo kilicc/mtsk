@@ -5,7 +5,11 @@ const API_URL = 'http://localhost:3001/api';
 
 type FinansTab = 'odeme' | 'fatura' | 'kasa' | 'borc';
 
-export default function Finans() {
+interface FinansProps {
+  onPageChange?: (page: any) => void;
+}
+
+export default function Finans({ onPageChange }: FinansProps = {}) {
   const [activeTab, setActiveTab] = useState<FinansTab>('odeme');
   const [odemeler, setOdemeler] = useState<Muhasebe[]>([]);
   const [faturalar, setFaturalar] = useState<KursiyerFatura[]>([]);
@@ -63,9 +67,52 @@ export default function Finans() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-4" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-4">Finans & Kasa Yönetimi</h1>
+        
+        {/* Kasa Hızlı Erişim */}
+        <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <h2 className="text-sm font-semibold text-gray-700 mb-2">Kasa İşlemleri</h2>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => onPageChange?.('kasa-listesi')}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Kasa Listesi
+            </button>
+            <button
+              onClick={() => onPageChange?.('kasa-toplamlari')}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Kasa Toplamları
+            </button>
+            <button
+              onClick={() => onPageChange?.('kasa-para-giris-cikis')}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Para Giriş/Çıkışı
+            </button>
+            <button
+              onClick={() => onPageChange?.('kasa-hareketleri')}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Kasa Hareketleri
+            </button>
+            <button
+              onClick={() => onPageChange?.('kasa-transfer')}
+              className="px-3 py-1.5 text-sm bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Kasa Transfer
+            </button>
+            <button
+              onClick={() => onPageChange?.('kasa-yeni-kayit')}
+              className="px-3 py-1.5 text-sm bg-gray-900 text-white rounded hover:bg-gray-800 font-semibold"
+            >
+              + Yeni Kasa
+            </button>
+          </div>
+        </div>
         
         <div className="flex gap-2 mb-4">
           <button
@@ -230,7 +277,7 @@ export default function Finans() {
           )}
 
           {activeTab === 'kasa' && kasaRaporu && (
-            <div className="p-6">
+            <div className="p-4">
               <h2 className="text-xl font-bold mb-4">Günlük Kasa Raporu - {new Date(selectedDate).toLocaleDateString('tr-TR')}</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-green-50 p-4 rounded-lg">

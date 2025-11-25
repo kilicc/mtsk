@@ -21,6 +21,9 @@ import yedeklemeRoutes from './routes/yedekleme.routes';
 import cariFirmaRoutes from './routes/cari-firma.routes';
 import bankaRoutes from './routes/banka.routes';
 import hizmetRoutes from './routes/hizmet.routes';
+import kasaRoutes from './routes/kasa.routes';
+import tanimlarRoutes from './routes/tanimlar.routes';
+import subeRoutes from './routes/sube.routes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -28,6 +31,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -52,6 +56,9 @@ app.use('/api/yedekleme', yedeklemeRoutes);
 app.use('/api/cari-firma', cariFirmaRoutes);
 app.use('/api/banka', bankaRoutes);
 app.use('/api/hizmet', hizmetRoutes);
+app.use('/api/kasa', kasaRoutes);
+app.use('/api/tanimlar', tanimlarRoutes);
+app.use('/api/sube', subeRoutes);
 
 // Start server
 app.listen(PORT, () => {

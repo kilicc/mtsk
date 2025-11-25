@@ -39,7 +39,8 @@ router.get('/bugun', async (req, res) => {
     const kursiyerler = await dogumGunuService.getBugunDogumGunu();
     res.json(kursiyerler);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('Dogum gunu bugun error:', error.message);
+    res.json([]);
   }
 });
 

@@ -77,7 +77,7 @@ export default function AracYakit() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-6" style={{ height: '100%', overflowY: 'auto' }}>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">⛽ Araç Yakıt Takibi</h1>

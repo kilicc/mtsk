@@ -74,3 +74,48 @@ export interface BorcRaporu {
   gecikme_gunu?: number;
 }
 
+export interface Kasa {
+  id: number;
+  kasa_adi: string;
+  kasa_kodu?: string;
+  bakiye: number;
+  aciklama?: string;
+  akt: number;
+  kayit_tarihi?: Date | string;
+}
+
+export interface KasaIslemi {
+  id: number;
+  id_kasa: number;
+  islem_tarihi: Date | string;
+  islem_tipi: 'giris' | 'cikis';
+  tutar: number;
+  aciklama?: string;
+  id_kursiyer?: number;
+  id_fatura?: number;
+  id_personel?: number;
+  odeme_yontemi?: string;
+  kayit_tarihi?: Date | string;
+}
+
+export interface KasaTransfer {
+  id: number;
+  id_kaynak_kasa: number;
+  id_hedef_kasa: number;
+  transfer_tarihi: Date | string;
+  tutar: number;
+  aciklama?: string;
+  kayit_tarihi?: Date | string;
+}
+
+export interface KasaToplamlari {
+  id_kasa: number;
+  kasa_adi: string;
+  baslangic_bakiye: number;
+  gunluk_giris: number;
+  gunluk_cikis: number;
+  toplam_giris: number;
+  toplam_cikis: number;
+  bakiye: number;
+}
+
